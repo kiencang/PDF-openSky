@@ -137,6 +137,25 @@ export class PdfService {
     return pdfDoc.getPageCount();
   }
 
+  async extractTextFromPDF(file: File): Promise<string> {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let text = '';
+    
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      try {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const pageText = content.items.map((item: any) => item.str).join(' ');
+        text += pageText + '\n';
+      } catch (err) {
+        console.warn(`Error extracting text from page ${pageNum}:`, err);
+      }
+    }
+    
+    return text;
+  }
+
   async cropPdf(file: File, start: number, end: number, totalPages: number): Promise<PdfCropResult> {
     if (start > end) {
       throw new Error('Trang bắt đầu không được lớn hơn trang kết thúc.');

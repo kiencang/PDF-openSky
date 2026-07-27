@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { getEncoding } from 'js-tiktoken';
 
 export type ReasoningEffort = 'high' | 'medium' | 'low' | 'none';
 
@@ -48,16 +49,10 @@ export class OpenRouterService {
     throw new Error('Vui lòng nhập OpenRouter API Key để sử dụng ứng dụng. Bạn có thể lấy Key tại openrouter.ai/keys.');
   }
 
-  async countTokens(fileData: string, mimeType: string): Promise<number> {
+  async countTokens(text: string, mimeType?: string): Promise<number> {
     try {
-      const cleanBase64 = fileData.includes(',') ? fileData.split(',')[1] : fileData;
-      const byteSize = Math.floor(cleanBase64.length * 0.75);
-      
-      if (mimeType === 'text/html') {
-        return Math.ceil(byteSize / 3.5);
-      } else {
-        return Math.ceil(byteSize / 300);
-      }
+      const enc = getEncoding('cl100k_base');
+      return enc.encode(text).length;
     } catch {
       return 1000;
     }

@@ -177,7 +177,8 @@ export class TranslationState {
       const result = await this.pdfService.cropPdf(file, start, end, this.pdfTotalPages());
       this.croppedFile.set(result.croppedFile);
       this.fileBase64.set(result.fileBase64);
-      await this.checkTokenLimit(result.fileBase64, file.type);
+      const extractedText = await this.pdfService.extractTextFromPDF(result.croppedFile);
+      await this.checkTokenLimit(extractedText);
 
       // Extract images from the cropped PDF
       try {
@@ -221,7 +222,7 @@ export class TranslationState {
       // store the clean base64 html
       const cleanBase64 = btoa(unescape(encodeURIComponent(cleanHtml)));
       this.fileBase64.set(cleanBase64);
-      await this.checkTokenLimit(cleanBase64, file.type);
+      await this.checkTokenLimit(cleanHtml);
     };
     reader.readAsText(file);
   }
@@ -240,10 +241,10 @@ export class TranslationState {
     this.pdfTotalPages.set(0);
   }
 
-  private async checkTokenLimit(base64String: string, mimeType: string) {
+  private async checkTokenLimit(text: string) {
     this.isCountingTokens.set(true);
     try {
-      const tokens = await this.openRouterService.countTokens(base64String, mimeType);
+      const tokens = await this.openRouterService.countTokens(text);
       this.tokenCount.set(tokens);
       const maxTokens = this.currentMaxTokens();
       if (tokens > maxTokens) {

@@ -155,7 +155,7 @@ export class HistoryModalComponent {
       case 'zero_math': return 'KH Xã hội';
       case 'zero_svg': return 'KH tổng hợp';
       case 'normal': return 'Toán Chuyên Ngành';
-      case 'phase1': return 'Cắt Lọc PDF (Phase 1)';
+      case 'phase1': return 'Chuyển định dạng (Phase 1)';
       case 'phase2': return 'Dịch HTML (Phase 2)';
       default: return mode;
     }
