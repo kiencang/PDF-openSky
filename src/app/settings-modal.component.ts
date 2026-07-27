@@ -26,7 +26,7 @@ import { TranslationMode } from './app';
         tabindex="0"
       >
         <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 id="settings-title" class="text-lg font-semibold text-slate-900">Thay đổi chế độ mặc định</h3>
+          <h3 id="settings-title" class="text-lg font-semibold text-slate-900">Thay đổi chế độ dịch mặc định</h3>
           <button (click)="closeModal.emit()" class="text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-colors focus:outline-none rounded-full p-2 cursor-pointer" aria-label="Đóng cài đặt">
             <lucide-icon [img]="X" class="w-5 h-5" aria-hidden="true"></lucide-icon>
           </button>

@@ -11,25 +11,20 @@ import { OpenRouterModelConfig } from './openrouter.service';
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative transition-opacity duration-300"
-             [class.opacity-50]="isProcessing" 
-             [class.pointer-events-none]="isProcessing">
-      <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3 rounded-t-2xl">
-        <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">2. Cấu hình</h2>
-        <div class="flex items-center gap-3 ml-auto">
-          <button (click)="openSettings.emit()" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" title="Thay đổi chế độ mặc định">
+    <div class="space-y-6">
+      <!-- Box 2: AI Model Selection -->
+      <section class="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative transition-opacity duration-300 overflow-hidden"
+               [class.opacity-50]="isProcessing" 
+               [class.pointer-events-none]="isProcessing">
+        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">2. Chọn mô hình AI (OpenRouter)</h2>
+          <button (click)="openApiKeyModal.emit()" 
+                  class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
+                  title="Cấu hình API Key & danh sách mô hình AI">
             <lucide-icon [img]="Settings" class="w-4.5 h-4.5" aria-hidden="true"></lucide-icon>
           </button>
         </div>
-      </div>
-      <div class="p-6 space-y-5">
-
-        <!-- OpenRouter Model Select -->
-        <div class="space-y-2">
-          <label for="openrouter-model-select" class="flex items-center gap-1.5 text-sm font-medium text-slate-700">
-            <lucide-icon [img]="Cpu" class="w-4 h-4 text-indigo-600"></lucide-icon>
-            <span>Mô hình AI (OpenRouter)</span>
-          </label>
+        <div class="p-6">
           <select 
             id="openrouter-model-select"
             [formControl]="modelControl"
@@ -40,11 +35,22 @@ import { OpenRouterModelConfig } from './openrouter.service';
             }
           </select>
         </div>
-        
-        <!-- Mode Selection -->
-        <div class="space-y-3">
-          <div class="block text-sm font-medium text-slate-700" id="mode-group-label">Chế độ dịch</div>
-          <fieldset class="space-y-2" aria-labelledby="mode-group-label">
+      </section>
+
+      <!-- Box 3: Translation Mode -->
+      <section class="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative transition-opacity duration-300 overflow-hidden"
+               [class.opacity-50]="isProcessing" 
+               [class.pointer-events-none]="isProcessing">
+        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">3. Chế độ dịch</h2>
+          <button (click)="openSettings.emit()" 
+                  class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
+                  title="Thay đổi chế độ dịch mặc định">
+            <lucide-icon [img]="Settings" class="w-4.5 h-4.5" aria-hidden="true"></lucide-icon>
+          </button>
+        </div>
+        <div class="p-6 space-y-5">
+          <fieldset class="space-y-2">
             <legend class="sr-only">Chọn chế độ dịch</legend>
             <label class="flex items-start gap-3 p-3 border rounded-xl transition-colors"
                    [class.cursor-pointer]="!isHtmlUploaded"
@@ -163,30 +169,30 @@ import { OpenRouterModelConfig } from './openrouter.service';
               }
             </div>
           </fieldset>
-        </div>
 
-        <!-- Action Button -->
-        <button 
-          (click)="processFile.emit()"
-          [disabled]="!canProcess || hasResultHtml"
-          class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed cursor-pointer text-white rounded-2xl font-medium flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
+          <!-- Action Button -->
+          <button 
+            (click)="processFile.emit()"
+            [disabled]="!canProcess || hasResultHtml"
+            class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed cursor-pointer text-white rounded-2xl font-medium flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            @if (isProcessing) {
+              <lucide-icon [img]="Loader2" class="w-5 h-5 animate-spin" aria-hidden="true"></lucide-icon>
+              <span>Đang xử lý...</span>
+            } @else {
+              <lucide-icon [img]="Play" class="w-5 h-5" aria-hidden="true"></lucide-icon>
+              <span>Bắt đầu ngay</span>
+            }
+          </button>
+
           @if (isProcessing) {
-            <lucide-icon [img]="Loader2" class="w-5 h-5 animate-spin" aria-hidden="true"></lucide-icon>
-            <span>Đang xử lý...</span>
-          } @else {
-            <lucide-icon [img]="Play" class="w-5 h-5" aria-hidden="true"></lucide-icon>
-            <span>Bắt đầu ngay</span>
+            <p class="text-center text-sm text-indigo-600 font-medium animate-pulse" aria-live="polite">
+              {{ progressMessage }}
+            </p>
           }
-        </button>
-
-        @if (isProcessing) {
-          <p class="text-center text-sm text-indigo-600 font-medium animate-pulse" aria-live="polite">
-            {{ progressMessage }}
-          </p>
-        }
-      </div>
-    </section>
+        </div>
+      </section>
+    </div>
   `
 })
 export class ConfigSectionComponent {
@@ -208,6 +214,7 @@ export class ConfigSectionComponent {
   @Input() hasResultHtml = false;
   @Input() progressMessage = '';
 
+  @Output() openApiKeyModal = new EventEmitter<void>();
   @Output() openSettings = new EventEmitter<void>();
   @Output() processFile = new EventEmitter<void>();
 

@@ -28,6 +28,7 @@ export class TranslationState {
 
   availableModels = signal<OpenRouterModelConfig[]>(this.openRouterService.getCustomModels());
   selectedModel = signal<string>(this.availableModels().length > 0 ? this.availableModels()[0].id : '~google/gemini-flash-latest');
+  searchModel = signal<string>(this.openRouterService.getSearchModel());
   reasoningEffort = signal<ReasoningEffort>(this.getInitialReasoningEffort());
   temperature = signal<number>(this.getInitialTemperature());
   selectedFile = signal<File | null>(null);
@@ -112,6 +113,12 @@ export class TranslationState {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('sila_pdf_translator_temperature', temp.toString());
     }
+  }
+
+  saveSearchModel(model: string) {
+    const finalModel = model.trim() || 'google/gemini-3.5-flash-lite';
+    this.openRouterService.saveSearchModel(finalModel);
+    this.searchModel.set(finalModel);
   }
 
   saveCustomModels(models: OpenRouterModelConfig[]) {

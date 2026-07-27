@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Key, X, ExternalLink, EyeOff, Eye, Trash2, Plus, RotateCcw, Cpu, ArrowUp, ArrowDown, Brain, Sliders } from 'lucide-angular';
+import { LucideAngularModule, Key, X, ExternalLink, EyeOff, Eye, Trash2, Plus, RotateCcw, Cpu, ArrowUp, ArrowDown, Brain, Sliders, Search } from 'lucide-angular';
 import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } from './openrouter.service';
 
 @Component({
@@ -90,7 +90,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               <div class="flex items-center gap-2">
                 <lucide-icon [img]="Cpu" class="w-4 h-4 text-indigo-600"></lucide-icon>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  2. Danh sách Mô hình AI (Tối đa 7 Models)
+                  2. Danh sách Mô hình AI dịch file PDF (Tối đa 7 Models)
                   <span class="text-indigo-600 font-mono font-bold">({{ tempModels().length }}/7)</span>
                 </h4>
               </div>
@@ -196,12 +196,34 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
             </div>
           </div>
 
-          <!-- Section 3: Reasoning Effort -->
+          <!-- Section 3: Search Keyword Translation Model -->
+          <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center gap-2">
+              <lucide-icon [img]="SearchIcon" class="w-4 h-4 text-indigo-600"></lucide-icon>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
+                3. Model AI để dịch từ khóa Việt sang Anh cho tìm kiếm
+              </h4>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Mô hình AI được dùng để tự động dịch các câu/từ khóa tiếng Việt sang Tiếng Anh chuẩn xác khi bạn tìm kiếm tài liệu trên Google Scholar ở thanh công cụ.
+            </p>
+            <div>
+              <input 
+                type="text" 
+                [ngModel]="tempSearchModel()"
+                (ngModelChange)="tempSearchModel.set($event)"
+                placeholder="google/gemini-3.5-flash-lite"
+                class="w-full px-3.5 py-2.5 text-xs font-mono border border-slate-300 rounded-xl bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              >
+            </div>
+          </div>
+
+          <!-- Section 4: Reasoning Effort -->
           <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/80 space-y-3">
             <div class="flex items-center gap-2">
               <lucide-icon [img]="Brain" class="w-4 h-4 text-indigo-600"></lucide-icon>
               <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                3. Mức độ suy luận (Reasoning Effort)
+                4. Mức độ suy luận (Reasoning Effort)
               </h4>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
@@ -224,13 +246,13 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
             </div>
           </div>
 
-          <!-- Section 4: Temperature -->
+          <!-- Section 5: Temperature -->
           <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/80 space-y-3">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <lucide-icon [img]="Sliders" class="w-4 h-4 text-indigo-600"></lucide-icon>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  4. Độ sáng tạo & Chính xác (Temperature)
+                  5. Độ sáng tạo & Chính xác (Temperature)
                 </h4>
               </div>
               <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200/60 font-mono">
@@ -297,6 +319,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
   `
 })
 export class ApiKeyModalComponent implements OnInit {
+  readonly SearchIcon = Search;
   readonly Brain = Brain;
   readonly Sliders = Sliders;
   readonly Key = Key;
@@ -314,12 +337,14 @@ export class ApiKeyModalComponent implements OnInit {
   @Input() initialApiKey = '';
   @Input() hasUserApiKey = false;
   @Input() customModels: OpenRouterModelConfig[] = [];
+  @Input() searchModel = 'google/gemini-3.5-flash-lite';
   @Input() reasoningEffort: ReasoningEffort = 'high';
   @Input() temperature = 0.5;
   
   @Output() save = new EventEmitter<{ 
     apiKey: string; 
     customModels: OpenRouterModelConfig[]; 
+    searchModel: string;
     reasoningEffort: ReasoningEffort;
     temperature: number;
     isReset?: boolean; 
@@ -329,6 +354,7 @@ export class ApiKeyModalComponent implements OnInit {
 
   tempApiKey = '';
   tempModels = signal<OpenRouterModelConfig[]>([]);
+  tempSearchModel = signal<string>('google/gemini-3.5-flash-lite');
   tempReasoningEffort = signal<ReasoningEffort>('high');
   tempTemperature = signal<number>(0.5);
   showKeyPlain = signal<boolean>(false);
@@ -344,6 +370,7 @@ export class ApiKeyModalComponent implements OnInit {
     this.tempApiKey = this.initialApiKey;
     const source = this.customModels && this.customModels.length > 0 ? this.customModels : DEFAULT_OPENROUTER_MODELS;
     this.tempModels.set(JSON.parse(JSON.stringify(source)));
+    this.tempSearchModel.set(this.searchModel || 'google/gemini-3.5-flash-lite');
     this.tempReasoningEffort.set(this.reasoningEffort || 'high');
     this.tempTemperature.set(this.temperature !== undefined ? this.temperature : 0.5);
   }
@@ -393,6 +420,7 @@ export class ApiKeyModalComponent implements OnInit {
 
   resetDefaultModels() {
     this.tempModels.set(JSON.parse(JSON.stringify(DEFAULT_OPENROUTER_MODELS)));
+    this.tempSearchModel.set('google/gemini-3.5-flash-lite');
     this.tempReasoningEffort.set('high');
     this.tempTemperature.set(0.5);
     this.onSaveConfig(true);
@@ -411,6 +439,7 @@ export class ApiKeyModalComponent implements OnInit {
     this.save.emit({
       apiKey: this.tempApiKey.trim(),
       customModels: cleaned.length > 0 ? cleaned : DEFAULT_OPENROUTER_MODELS,
+      searchModel: this.tempSearchModel().trim() || 'google/gemini-3.5-flash-lite',
       reasoningEffort: this.tempReasoningEffort(),
       temperature: this.tempTemperature(),
       isReset

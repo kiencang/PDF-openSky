@@ -287,8 +287,9 @@ export class OpenRouterService {
     return text;
   }
 
-  async translateSearchQuery(query: string, modelName: string = this.DEFAULT_MODEL): Promise<string> {
+  async translateSearchQuery(query: string, modelName?: string): Promise<string> {
     const apiKey = this.getApiKey();
+    const activeModel = modelName || this.getSearchModel();
     const systemInstruction = `Bạn là một AI chuyên dịch truy vấn tìm kiếm (search queries) từ tiếng Việt sang Tiếng Anh. Nhiệm vụ DUY NHẤT của bạn là trả về MỘT (1) truy vấn tìm kiếm tiếng Anh hiệu quả nhất.
 QUY TẮC:
 1. CHỈ MỘT KẾT QUẢ
@@ -306,7 +307,7 @@ QUY TẮC:
         'X-Title': 'PDF-openSky'
       },
       body: JSON.stringify({
-        model: modelName,
+        model: activeModel,
         messages: [
           { role: 'system', content: systemInstruction },
           { role: 'user', content: prompt }
@@ -324,6 +325,22 @@ QUY TẮC:
 
     const text = json.choices?.[0]?.message?.content || '';
     return text.trim();
+  }
+
+  getSearchModel(): string {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('openrouter_search_model');
+      if (saved && saved.trim() !== '') {
+        return saved.trim();
+      }
+    }
+    return 'google/gemini-3.5-flash-lite';
+  }
+
+  saveSearchModel(model: string): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('openrouter_search_model', model.trim());
+    }
   }
 
   getCustomModels(): OpenRouterModelConfig[] {

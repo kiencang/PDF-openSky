@@ -181,13 +181,16 @@ export class App {
     this.showApiKeyModal.set(false);
   }
 
-  saveApiKey(data: { apiKey: string; customModels: OpenRouterModelConfig[]; reasoningEffort?: ReasoningEffort; temperature?: number; isReset?: boolean }) {
+  saveApiKey(data: { apiKey: string; customModels: OpenRouterModelConfig[]; searchModel?: string; reasoningEffort?: ReasoningEffort; temperature?: number; isReset?: boolean }) {
     const keyVal = data.apiKey.trim();
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('sila_pdf_translator_user_api_key', keyVal);
     }
     this.translationState.userApiKey.set(keyVal);
     this.translationState.saveCustomModels(data.customModels);
+    if (data.searchModel) {
+      this.translationState.saveSearchModel(data.searchModel);
+    }
     if (data.reasoningEffort) {
       this.translationState.saveReasoningEffort(data.reasoningEffort);
     }
