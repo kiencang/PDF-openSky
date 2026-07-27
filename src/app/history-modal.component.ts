@@ -19,7 +19,7 @@ import { TranslatedDoc } from './storage.service';
       tabindex="0"
     >
       <div 
-        class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-0 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[80vh]" 
+        class="bg-white rounded-2xl shadow-xl max-w-4xl w-full p-0 animate-in zoom-in-95 duration-200 overflow-hidden flex flex-col max-h-[80vh]" 
         (click)="$event.stopPropagation()"
         (keydown)="$event.stopPropagation()"
         tabindex="0"

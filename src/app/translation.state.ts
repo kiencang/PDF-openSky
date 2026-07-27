@@ -98,7 +98,7 @@ export class TranslationState {
         }
       }
     }
-    return 0.5;
+    return 1;
   }
 
   saveReasoningEffort(effort: ReasoningEffort) {

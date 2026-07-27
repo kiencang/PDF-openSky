@@ -111,15 +111,6 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               <div class="flex items-center gap-2">
                 <button 
                   type="button"
-                  (click)="resetDefaultModels()"
-                  class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors cursor-pointer"
-                  title="Khôi phục danh sách 7 model mặc định"
-                >
-                  <lucide-icon [img]="RotateCcw" class="w-3.5 h-3.5"></lucide-icon>
-                  <span>Khôi phục mặc định</span>
-                </button>
-                <button 
-                  type="button"
                   (click)="addModelRow()"
                   [disabled]="tempModels().length >= 7"
                   class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border rounded-lg transition-colors font-semibold"
@@ -140,7 +131,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
                 https://openrouter.ai/discover
                 <lucide-icon [img]="ExternalLink" class="w-3 h-3" aria-hidden="true"></lucide-icon>
               </a>.
-              Nên chọn các model có khả năng xử lý đa phương thức (Multi-modal API), tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch phase2 (HTML).
+              Nên chọn các model có khả năng xử lý đa phương thức (Multi-modal API), tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch Phase 2 (dịch trực tiếp HTML).
             </p>
 
             <!-- Table of Model Rows -->
@@ -279,7 +270,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mặc định (0.5) cân bằng; mức cao (0.7 - 1.0) cho bản dịch diễn đạt sáng tạo hơn.
+              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mức vừa (0.4 - 0.7) uyển chuyển hơn; mức cao (0.8 - 1.0) cho bản dịch diễn đạt sáng tạo hơn.
             </p>
             <div class="space-y-2 pt-1">
               <input 
@@ -293,8 +284,8 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               />
               <div class="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
                 <span>0.0 (Chính xác / Kỹ thuật)</span>
-                <span>0.5 (Mặc định • Cân bằng)</span>
-                <span>1.0 (Diễn đạt sáng tạo)</span>
+                <span>0.5 (Uyển chuyển hơn)</span>
+                <span>1.0 (Diễn đạt sáng tạo • Mặc định)</span>
               </div>
             </div>
           </div>
@@ -316,6 +307,15 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
             }
           </div>
           <div class="flex items-center gap-2">
+            <button 
+              type="button"
+              (click)="resetDefaultModels()"
+              class="px-3.5 py-2 inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition-all shadow-2xs cursor-pointer"
+              title="Khôi phục danh sách 7 model mặc định"
+            >
+              <lucide-icon [img]="RotateCcw" class="w-3.5 h-3.5"></lucide-icon>
+              <span>Khôi phục mặc định</span>
+            </button>
             <button 
               type="button"
               (click)="closeModal.emit()" 
@@ -358,7 +358,7 @@ export class ApiKeyModalComponent implements OnInit {
   @Input() customModels: OpenRouterModelConfig[] = [];
   @Input() searchModel = 'google/gemini-3.5-flash-lite';
   @Input() reasoningEffort: ReasoningEffort = 'high';
-  @Input() temperature = 0.5;
+  @Input() temperature = 1;
   
   @Output() save = new EventEmitter<{ 
     apiKey: string; 
@@ -375,7 +375,7 @@ export class ApiKeyModalComponent implements OnInit {
   tempModels = signal<OpenRouterModelConfig[]>([]);
   tempSearchModel = signal<string>('google/gemini-3.5-flash-lite');
   tempReasoningEffort = signal<ReasoningEffort>('high');
-  tempTemperature = signal<number>(0.5);
+  tempTemperature = signal<number>(1);
   showKeyPlain = signal<boolean>(false);
 
   readonly reasoningOptions: { value: ReasoningEffort; label: string; sublabel: string }[] = [
@@ -391,7 +391,7 @@ export class ApiKeyModalComponent implements OnInit {
     this.tempModels.set(JSON.parse(JSON.stringify(source)));
     this.tempSearchModel.set(this.searchModel || 'google/gemini-3.5-flash-lite');
     this.tempReasoningEffort.set(this.reasoningEffort || 'high');
-    this.tempTemperature.set(this.temperature !== undefined ? this.temperature : 0.5);
+    this.tempTemperature.set(this.temperature !== undefined ? this.temperature : 1);
   }
 
   onTemperatureInput(event: Event) {
@@ -441,7 +441,7 @@ export class ApiKeyModalComponent implements OnInit {
     this.tempModels.set(JSON.parse(JSON.stringify(DEFAULT_OPENROUTER_MODELS)));
     this.tempSearchModel.set('google/gemini-3.5-flash-lite');
     this.tempReasoningEffort.set('high');
-    this.tempTemperature.set(0.5);
+    this.tempTemperature.set(1);
     this.onSaveConfig(true);
   }
 
