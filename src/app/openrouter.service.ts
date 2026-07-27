@@ -184,7 +184,7 @@ export class OpenRouterService {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://pdf-opensky.ai',
+        'HTTP-Referer': 'https://pdf-opensky.wpsila.com',
         'X-Title': 'PDF-openSky'
       },
       body: JSON.stringify(requestBody)
@@ -266,7 +266,7 @@ export class OpenRouterService {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://pdf-opensky.ai',
+        'HTTP-Referer': 'https://pdf-opensky.wpsila.com',
         'X-Title': 'PDF-openSky'
       },
       body: JSON.stringify(requestBody)
@@ -303,7 +303,7 @@ QUY TẮC:
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://pdf-opensky.ai',
+        'HTTP-Referer': 'https://pdf-opensky.wpsila.com',
         'X-Title': 'PDF-openSky'
       },
       body: JSON.stringify({

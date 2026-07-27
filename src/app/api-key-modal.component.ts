@@ -220,11 +220,11 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
             <div class="flex items-center gap-2">
               <lucide-icon [img]="SearchIcon" class="w-4 h-4 text-indigo-600"></lucide-icon>
               <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                3. Model AI để dịch từ khóa Việt sang Anh cho tìm kiếm
+                3. Model AI để dịch từ khóa cho tìm kiếm
               </h4>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Mô hình AI được dùng để dịch các câu/từ khóa tiếng Việt sang Tiếng Anh chuẩn xác khi bạn tìm kiếm tài liệu trên Google Scholar ở thanh công cụ. Nên chọn các model AI đủ tốt nhưng nhẹ và có tốc độ phản hồi cao.
+              Mô hình AI được dùng để dịch từ khóa tiếng Việt sang Tiếng Anh, giúp bạn tìm kiếm tài liệu dễ dàng hơn trên Google Scholar ở thanh công cụ. Nên chọn các model AI đủ tốt nhưng nhẹ và có tốc độ phản hồi cao.
             </p>
             <div>
               <input 
