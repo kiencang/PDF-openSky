@@ -43,6 +43,20 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
 
         <!-- Scrollable Content -->
         <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
+
+          <!-- OpenRouter Overview & Pricing Note -->
+          <div class="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4.5 text-xs text-slate-700 leading-relaxed space-y-2.5">
+            <p>
+              Ứng dụng kết nối trực tiếp với OpenRouter API, cổng trung gian này sẽ kết nối với bất cứ model AI nào mà nó có (hiện có gần 400 model). Vì dịch là nhiệm vụ khó, bạn hãy chọn các model AI chất lượng nhất trong khả năng. Ứng dụng lưu trữ sẵn một số model mặc định chất lượng cao, bạn có thể tự do điều chỉnh lại thành các model khác theo ý muốn.
+            </p>
+            <p>
+              Một số model thuộc nhóm hàng đầu có chi phí lớn, có thể dao động từ 10 - 30$/1M token đầu ra, để kiểm soát chi phí tốt hơn, bạn nên nắm rõ giá của chúng. Hãy vào trang: 
+              <a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 hover:underline font-semibold inline-flex items-center gap-0.5">
+                https://openrouter.ai/models
+                <lucide-icon [img]="ExternalLink" class="w-3 h-3" aria-hidden="true"></lucide-icon>
+              </a>, rồi nhập mã model vào ô "Search models" để biết thông tin giá cụ thể tại thời điểm tra cứu.
+            </p>
+          </div>
           
           <!-- Section 1: OpenRouter API Key -->
           <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/80 space-y-4">
@@ -121,7 +135,12 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
             </div>
 
             <p class="text-xs text-slate-500 leading-relaxed">
-              Tùy chỉnh mã model, tên hiển thị và thứ tự xuất hiện. Danh sách tối đa 7 model sẽ được cập nhật ngay ở menu chọn AI ở màn hình chính khi bạn lưu.
+              Nhập mã model từ OpenRouter (VD: <code class="font-mono text-[11px] bg-slate-100 text-slate-700 px-1 py-0.5 rounded">~google/gemini-flash-latest</code>) dùng cho dịch thuật chính thức hoặc chuyển đổi file PDF. Mã model ở cột trái cần nhập tuyệt đối chính xác, nhãn tên ở cột phải tùy ý bạn đặt, miễn sao dễ hiểu cho chính bạn. Bạn có thể thêm, sửa, xóa, điều chỉnh thứ tự danh sách các model AI bên dưới. Danh sách các model AI phổ biến & mạnh nhất có thể tham khảo ở đây: 
+              <a href="https://openrouter.ai/discover" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 hover:underline font-semibold inline-flex items-center gap-0.5">
+                https://openrouter.ai/discover
+                <lucide-icon [img]="ExternalLink" class="w-3 h-3" aria-hidden="true"></lucide-icon>
+              </a>.
+              Nên chọn các model có khả năng xử lý đa phương tiện, tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch phase2 (HTML).
             </p>
 
             <!-- Table of Model Rows -->
@@ -205,7 +224,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </h4>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Mô hình AI được dùng để tự động dịch các câu/từ khóa tiếng Việt sang Tiếng Anh chuẩn xác khi bạn tìm kiếm tài liệu trên Google Scholar ở thanh công cụ.
+              Mô hình AI được dùng để dịch các câu/từ khóa tiếng Việt sang Tiếng Anh chuẩn xác khi bạn tìm kiếm tài liệu trên Google Scholar ở thanh công cụ. Nên chọn các model AI đủ tốt nhưng nhẹ và có tốc độ phản hồi cao.
             </p>
             <div>
               <input 
@@ -227,7 +246,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </h4>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Tùy chỉnh mức độ AI suy luận sâu (Deep Thinking) để tăng chất lượng dịch các tài liệu phức tạp. Chuỗi suy luận sẽ được tự động loại bỏ khỏi kết quả trả về (<code class="font-mono text-[10px] bg-slate-200/60 px-1 py-0.5 rounded text-indigo-700">exclude: true</code>).
+              Tùy chỉnh mức độ AI suy luận sâu (Deep Thinking) để tăng chất lượng dịch các tài liệu phức tạp. Nên chọn Cao hoặc ít nhất là Trung bình để có chất lượng dịch tốt.
             </p>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
               @for (opt of reasoningOptions; track opt.value) {
@@ -260,7 +279,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mặc định (0.5) cân bằng; mức cao (0.7 - 1.0) cho bản dịch diễn đạt tự nhiên hơn.
+              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mặc định (0.5) cân bằng; mức cao (0.7 - 1.0) cho bản dịch diễn đạt sáng tạo hơn.
             </p>
             <div class="space-y-2 pt-1">
               <input 
@@ -275,7 +294,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               <div class="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
                 <span>0.0 (Chính xác / Kỹ thuật)</span>
                 <span>0.5 (Mặc định • Cân bằng)</span>
-                <span>1.0 (Diễn đạt tự nhiên)</span>
+                <span>1.0 (Diễn đạt sáng tạo)</span>
               </div>
             </div>
           </div>

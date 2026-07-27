@@ -28,8 +28,8 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: '~anthropic/claude-opus-latest', name: 'Anthropic Claude Opus Latest' },
   { id: '~x-ai/grok-latest', name: 'xAI Grok Latest' },
   { id: '~moonshotai/kimi-latest', name: 'MoonshotAI Kimi Latest' },
-  { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2' },
-  { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', name: 'Nemotron 3 Ultra (free)' }
+  { id: 'minimax/minimax-m3', name: 'MiniMax M3' },
+  { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ phase2)' }
 ];
 
 export const POPULAR_OPENROUTER_MODELS: OpenRouterModel[] = [
