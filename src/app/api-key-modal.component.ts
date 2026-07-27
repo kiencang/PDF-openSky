@@ -140,7 +140,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
                 https://openrouter.ai/discover
                 <lucide-icon [img]="ExternalLink" class="w-3 h-3" aria-hidden="true"></lucide-icon>
               </a>.
-              Nên chọn các model có khả năng xử lý đa phương tiện, tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch phase2 (HTML).
+              Nên chọn các model có khả năng xử lý đa phương thức (Multi-modal API), tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch phase2 (HTML).
             </p>
 
             <!-- Table of Model Rows -->

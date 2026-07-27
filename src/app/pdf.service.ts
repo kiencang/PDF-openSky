@@ -101,6 +101,36 @@ export class PdfService {
     return images;
   }
 
+  async renderPdfToImages(file: File): Promise<string[]> {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const images: string[] = [];
+    
+    // Scale 2.0 for better text resolution for OCR
+    const scale = 2.0;
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) continue;
+
+      try {
+        await page.render({ canvasContext: ctx, viewport: viewport } as unknown as Parameters<typeof page.render>[0]).promise;
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        // keep only the base64 part
+        images.push(dataUrl.split(',')[1]);
+      } catch (err) {
+        console.warn(`Error rendering page ${pageNum} to image:`, err);
+      }
+    }
+    
+    return images;
+  }
+
   async getPageCount(file: File): Promise<number> {
     const arrayBuffer = await file.arrayBuffer();
     const pdfDoc = await PDFDocument.load(arrayBuffer);

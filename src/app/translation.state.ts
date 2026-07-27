@@ -287,13 +287,25 @@ export class TranslationState {
         }
       }
 
+      let dataToPass: string | string[] = base64;
+      if (mime === 'application/pdf') {
+         const m = this.selectedModel().toLowerCase();
+         if (m.includes('openai/') || m.includes('anthropic/') || m.includes('x-ai/') || m.includes('claude') || m.includes('gpt') || m.includes('grok')) {
+            this.progressMessage.set('Đang chuẩn bị tài liệu (Tối ưu hóa hình ảnh)...');
+            const cropped = this.croppedFile();
+            if (cropped) {
+               dataToPass = await this.pdfService.renderPdfToImages(cropped);
+            }
+         }
+      }
+
       if (currentMode === 'zero_math') {
         this.progressMessage.set('Dịch file PDF sang tiếng Việt (Tài liệu khoa học xã hội)...');
         const [instruction, prompt] = await Promise.all([
           this.loadPrompt('system_instructions_zero_math.md'),
           this.loadPrompt('prompt_zero_math.md')
         ]);
-        const result = await this.openRouterService.translate(base64, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
         const rawHtml = this.imageProcessorService.extractHtml(result);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
@@ -303,7 +315,7 @@ export class TranslationState {
           this.loadPrompt('system_instructions_zero_svg.md'),
           this.loadPrompt('prompt_zero_svg.md')
         ]);
-        const result = await this.openRouterService.translate(base64, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
         const rawHtml = this.imageProcessorService.extractHtml(result);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
@@ -313,7 +325,7 @@ export class TranslationState {
           this.loadPrompt('system_instructions.md'),
           this.loadPrompt('prompt.md')
         ]);
-        const result = await this.openRouterService.translate(base64, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
         const rawHtml = this.imageProcessorService.extractHtml(result);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
@@ -323,7 +335,7 @@ export class TranslationState {
           this.loadPrompt('system_instructions_phase_1.md'),
           this.loadPrompt('prompt_phase_1.md')
         ]);
-        const result = await this.openRouterService.translate(base64, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
         const rawHtml = this.imageProcessorService.extractHtml(result);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }

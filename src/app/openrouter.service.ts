@@ -32,45 +32,6 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ phase2)' }
 ];
 
-export const POPULAR_OPENROUTER_MODELS: OpenRouterModel[] = [
-  {
-    id: 'google/gemini-2.5-flash',
-    name: 'Gemini 2.5 Flash',
-    provider: 'Google',
-    description: 'Rất nhanh, giá rẻ, hỗ trợ PDF & hình ảnh tốt.'
-  },
-  {
-    id: 'google/gemini-2.5-pro',
-    name: 'Gemini 2.5 Pro',
-    provider: 'Google',
-    description: 'Chất lượng cao nhất cho tài liệu phức tạp.'
-  },
-  {
-    id: 'anthropic/claude-3.5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'Anthropic',
-    description: 'Dịch thuật tự nhiên, phân tích bố cục cực tốt.'
-  },
-  {
-    id: 'openai/gpt-4o',
-    name: 'GPT-4o',
-    provider: 'OpenAI',
-    description: 'Model đa thức mạnh mẽ của OpenAI.'
-  },
-  {
-    id: 'deepseek/deepseek-chat',
-    name: 'DeepSeek V3',
-    provider: 'DeepSeek',
-    description: 'Model giá siêu rẻ, suy luận nhanh.'
-  },
-  {
-    id: 'meta-llama/llama-3.3-70b-instruct',
-    name: 'Llama 3.3 70B',
-    provider: 'Meta',
-    description: 'Mã nguồn mở chất lượng cao.'
-  }
-];
-
 @Injectable({
   providedIn: 'root'
 })
@@ -103,7 +64,7 @@ export class OpenRouterService {
   }
 
   async translate(
-    fileData: string,
+    fileData: string | string[],
     mimeType: string,
     prompt: string,
     systemInstruction: string,
@@ -113,11 +74,10 @@ export class OpenRouterService {
     temperature = 0.5
   ): Promise<string> {
     const apiKey = this.getApiKey();
-    const cleanFileData = fileData.includes(',') ? fileData.split(',')[1] : fileData;
-
     const contentParts: OpenRouterContentPart[] = [];
 
-    if (mimeType === 'text/html') {
+    if (mimeType === 'text/html' && typeof fileData === 'string') {
+      const cleanFileData = fileData.includes(',') ? fileData.split(',')[1] : fileData;
       let htmlText = cleanFileData;
       try {
         htmlText = new TextDecoder().decode(
@@ -131,14 +91,26 @@ export class OpenRouterService {
         text: `[Tài liệu HTML cần dịch]:\n\n${htmlText}`
       });
     } else {
-      // PDF or Image document via data URL
-      const dataUrl = `data:${mimeType};base64,${cleanFileData}`;
-      contentParts.push({
-        type: 'image_url',
-        image_url: {
-          url: dataUrl
+      if (Array.isArray(fileData)) {
+        for (const b64 of fileData) {
+          const cleanB64 = b64.includes(',') ? b64.split(',')[1] : b64;
+          contentParts.push({
+            type: 'image_url',
+            image_url: {
+              url: `data:image/jpeg;base64,${cleanB64}`
+            }
+          });
         }
-      });
+      } else {
+        const cleanFileData = fileData.includes(',') ? fileData.split(',')[1] : fileData;
+        const dataUrl = `data:${mimeType};base64,${cleanFileData}`;
+        contentParts.push({
+          type: 'image_url',
+          image_url: {
+            url: dataUrl
+          }
+        });
+      }
     }
 
     // Attach extracted images if available
