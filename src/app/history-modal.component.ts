@@ -85,11 +85,7 @@ import { TranslatedDoc } from './storage.service';
                           {{ getModeLabel(item.mode) }}
                         </span>
                         @if (item.model) {
-                          <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
-                                [ngClass]="{
-                                  'bg-purple-50 text-purple-700 border border-purple-200/50': item.model.includes('pro'),
-                                  'bg-amber-50 text-amber-700 border border-amber-200/50': item.model.includes('flash')
-                                }">
+                          <span class="text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 font-mono" [title]="item.model">
                             {{ getModelLabel(item.model) }}
                           </span>
                         }
@@ -167,9 +163,9 @@ export class HistoryModalComponent {
 
   getModelLabel(model?: string): string {
     if (!model) return '';
-    if (model.includes('pro')) return 'Model Pro';
-    if (model.includes('flash')) return 'Model Flash';
-    return model;
+    if (model === 'flash' || model === 'gemini-flash') return 'google/gemini-2.5-flash';
+    if (model === 'pro' || model === 'gemini-pro') return 'google/gemini-2.5-pro';
+    return model.startsWith('~') ? model.substring(1) : model;
   }
 
   formatDate(timestamp: number): string {
