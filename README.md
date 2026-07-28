@@ -1,7 +1,7 @@
 # PDF-openSky
-Dịch file PDF từ Anh sang Việt bằng bất kỳ model AI nào (thông qua cổng trung gian OpenRouter). PDF-openSky đang trong giai đoạn phát triển & thử nghiệm.
+Dịch file PDF từ tiếng Anh sang tiếng Việt bằng bất kỳ model AI nào (thông qua cổng trung gian OpenRouter). PDF-openSky đang trong giai đoạn phát triển & thử nghiệm.
 
-PDF-openSky được phát triển dựa trên phiên bản PDF-silaTranslator-Online (1.0.64) đã ổn định: https://github.com/kiencang/PDF-silaTranslator-Online
+PDF-openSky được điều chỉnh dựa trên phiên bản PDF-silaTranslator-Online (1.0.64) đã ổn định: https://github.com/kiencang/PDF-silaTranslator-Online
 
 ## Lý do triển khai
 
@@ -9,9 +9,9 @@ PDF-silaTranslator-Online hiện có chất lượng tốt, tương thích rất
 
 PDF-openSky ra đời nhằm khỏa lấp chỗ trống đó, nó giúp người dùng sử dụng các model AI rất mạnh khác mà thị trường hiện có sẵn.
 
-Để giảm mức độ phức tạp của mã nguồn và tăng khả năng mở rộng lên tối đa PDF-openSky sử dụng cổng trung gian OpenRouter để kết nối với các model AI.
+Để giảm mức độ phức tạp của mã nguồn và tăng khả năng mở rộng lên tối đa, PDF-openSky sử dụng cổng trung gian OpenRouter (https://openrouter.ai/) để kết nối với các model AI. OpenRouter rất dễ đăng ký cũng như sử dụng.
 
-Vì OpenRouter là API trung gian và hầu hết có phí, nếu người dùng nào có khả năng chi trả hạn chế vẫn nên tiếp tục sử dụng PDF-silaTranslator-Online, vì công cụ này tận dụng được ngưỡng miễn phí ngày tương đối rộng rãi của Gemini.
+Vì OpenRouter là API trung gian và hầu hết các model trên này đều có phí, nếu người dùng nào có khả năng chi trả hạn chế vẫn nên tiếp tục sử dụng PDF-silaTranslator-Online, vì công cụ này tận dụng được ngưỡng miễn phí ngày tương đối rộng rãi của Gemini.
 
 ## Tính năng chính
 
@@ -30,9 +30,9 @@ Mặc định PDF-openSky có các model AI sau:
 
 Danh sách các model AI phổ biến & mạnh nhất có thể tham khảo ở đây: https://openrouter.ai/discover
 
-Nên chọn các model có khả năng xử lý đa phương thức (Multi-modal API), tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF, model chỉ nhận text chỉ có khả năng dịch Phase 2 (dịch trực tiếp HTML). 
+Nên chọn các model có khả năng xử lý đa phương thức (Multi-modal API) đủ mạnh, tức là hiểu được cả ảnh, text. Các model mà chỉ xử lý được text sẽ không dịch được PDF theo cách trực tiếp, model nào chỉ nhận text thì chỉ có khả năng dịch Phase 2 (dịch trực tiếp HTML). 
 
-Ví dụ trong 7 model AI có sẵn ở trên, sáu model đầu tiên là đa phương thức, model cuối Z.ai GLM 5.2, dù rất mạnh, hiện nó chỉ chấp nhận đầu vào văn bản thuần, do vậy chỉ dùng dịch phase 2 của công cụ này. Các model còn lại có thể dịch trực tiếp file PDF.
+Ví dụ trong 7 model AI có sẵn ở trên, sáu model đầu tiên là đa phương thức, model cuối Z.ai GLM 5.2, dù rất mạnh, hiện nó chỉ chấp nhận đầu vào văn bản thuần, do vậy chỉ dùng dịch phase 2 của công cụ này. Các model còn lại có thể dịch trực tiếp file PDF luôn.
 
 Đối với dịch từ khóa từ tiếng Việt sang tiếng Anh để tra cứu tài liệu trên Google Scholar, công cụ này sử dụng model có chất lượng khá và phản hồi nhanh là: `google/gemini-3.5-flash-lite`
 
@@ -42,9 +42,9 @@ Dịch từ khóa không cần các model quá mạnh, nó chỉ cần đủ t�
 
 Để tăng chất lượng dịch, tất cả các model khi dịch đều được chỉ định tham số Reasoning ở mức HIGH (Cao).
 
-Người dùng có quyền điều chỉnh tham số này, bao gồm cả thiết lập mức LOW (Thấp) và tắt hoàn toàn. Tuy nhiên lời khuyên chung cho các tác vụ khó, và dĩ nhiên trong đó có dịch thuật, chúng ta nên để tối thiểu là MEDIUM (Trung bình), còn lý tưởng nhất nên để HIGH.
+Người dùng có quyền điều chỉnh tham số này, bao gồm cả thiết lập mức LOW (Thấp) hoặc tắt hoàn toàn. Tuy nhiên lời khuyên chung cho các tác vụ khó, và dĩ nhiên trong đó có dịch thuật, chúng ta nên để tối thiểu là MEDIUM (Trung bình), còn lý tưởng nhất nên để HIGH.
 
-Mức suy luận để càng cao, chi phí sẽ càng tăng thêm.
+Điểm duy nhất cần lưu ý ở đây: Mức suy luận để càng cao, chi phí sẽ càng tăng thêm.
 
 ## Độ sáng tạo (temperature)
 
