@@ -43,6 +43,13 @@ Ví dụ trong 7 model AI có sẵn ở trên, sáu model đầu tiên là đa p
 
 Dịch từ khóa không cần các model quá mạnh, nó chỉ cần đủ tốt, và quan trọng nhất là phải có tốc độ cao để giảm thiểu thời gian chờ đợi của người dùng.
 
+### Một số trải nghiệm thực tế
+- Dịch nhanh nhất: Google Gemini Flash Latest;
+- Chất lượng tổng thể tốt nhất: OpenAI GPT Latest, Anthropic Claude Opus Latest, Google Gemini Flash Latest;
+- Chất lượng kém nhất: MiniMax M3;
+- Tiềm năng, triển vọng: Z.ai GLM 5.2, MoonshotAI Kimi Latest;
+- Tốt nhưng rất chậm: MoonshotAI Kimi Latest;
+
 ## Reasoning (suy luận)
 
 Để tăng chất lượng dịch, tất cả các model khi dịch đều được chỉ định tham số Reasoning ở mức HIGH (Cao).
