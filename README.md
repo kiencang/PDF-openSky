@@ -1,7 +1,12 @@
 # PDF-openSky
+
 Dịch file PDF từ tiếng Anh sang tiếng Việt bằng bất kỳ model AI nào (thông qua cổng trung gian OpenRouter). PDF-openSky đang trong giai đoạn phát triển & thử nghiệm.
 
-PDF-openSky được điều chỉnh dựa trên phiên bản PDF-silaTranslator-Online (1.0.64) đã ổn định: https://github.com/kiencang/PDF-silaTranslator-Online
+**Link**: https://pdf-opensky.wpsila.com
+
+Ứng dụng web không cần đăng nhập, tạo tài khoản. Chỉ cần nhập API Key của OpenRouter là dùng được ngay. API Key được lưu cục bộ tại trình duyệt của người dùng, do vậy bạn chỉ nên dùng nó trên máy tính cá nhân của riêng bạn.
+
+PDF-openSky được điều chỉnh, phát triển thêm dựa trên phiên bản PDF-silaTranslator-Online (1.0.64) đã ổn định: https://github.com/kiencang/PDF-silaTranslator-Online
 
 ## Lý do triển khai
 
