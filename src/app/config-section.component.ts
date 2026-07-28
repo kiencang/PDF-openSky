@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { LucideAngularModule, Settings, AlertCircle, ArrowDown, Loader2, Play, Cpu } from 'lucide-angular';
+import { LucideAngularModule, Settings, AlertCircle, ArrowDown, Loader2, Play, Cpu, ChevronDown } from 'lucide-angular';
 import { TranslationMode } from './app';
 import { OpenRouterModelConfig } from './openrouter.service';
 
@@ -17,7 +17,7 @@ import { OpenRouterModelConfig } from './openrouter.service';
                [class.opacity-50]="isProcessing" 
                [class.pointer-events-none]="isProcessing">
         <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
-          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">2. Chọn mô hình AI (OpenRouter)</h2>
+          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">2. Chọn mô hình AI</h2>
           <button (click)="openApiKeyModal.emit()" 
                   class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
                   title="Cấu hình API Key & danh sách mô hình AI">
@@ -25,15 +25,20 @@ import { OpenRouterModelConfig } from './openrouter.service';
           </button>
         </div>
         <div class="p-6">
-          <select 
-            id="openrouter-model-select"
-            [formControl]="modelControl"
-            class="block w-full py-2.5 px-3 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 text-sm font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
-          >
-            @for (m of customModels; track m.id) {
-              <option [value]="m.id">{{ m.name }}</option>
-            }
-          </select>
+          <div class="relative">
+            <select 
+              id="openrouter-model-select"
+              [formControl]="modelControl"
+              class="appearance-none block w-full py-2.5 pl-3 pr-10 border border-slate-300 rounded-xl bg-slate-50 text-slate-900 text-sm font-medium focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors cursor-pointer"
+            >
+              @for (m of customModels; track m.id) {
+                <option [value]="m.id">{{ m.name }}</option>
+              }
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
+              <lucide-icon [img]="ChevronDown" class="w-4 h-4 text-slate-500"></lucide-icon>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -42,7 +47,7 @@ import { OpenRouterModelConfig } from './openrouter.service';
                [class.opacity-50]="isProcessing" 
                [class.pointer-events-none]="isProcessing">
         <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
-          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">3. Chế độ dịch</h2>
+          <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">3. Phong cách dịch</h2>
           <button (click)="openSettings.emit()" 
                   class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
                   title="Thay đổi chế độ dịch mặc định">
@@ -202,6 +207,7 @@ export class ConfigSectionComponent {
   readonly Loader2 = Loader2;
   readonly Play = Play;
   readonly Cpu = Cpu;
+  readonly ChevronDown = ChevronDown;
 
   @Input() customModels: OpenRouterModelConfig[] = [];
   @Input() modeControl!: FormControl<TranslationMode>;
