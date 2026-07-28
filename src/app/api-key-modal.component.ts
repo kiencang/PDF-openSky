@@ -94,35 +94,18 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </button>
             </div>
             <p class="text-[11px] text-slate-500 italic">
-              Khóa API được lưu cục bộ an toàn trong trình duyệt của bạn (<code class="font-mono text-[10px] bg-slate-200/60 px-1 py-0.5 rounded text-indigo-700">LocalStorage</code>).
+              Khóa API được lưu cục bộ an toàn trong trình duyệt của bạn (<code class="font-mono text-[10px] bg-slate-200/60 px-1 py-0.5 rounded text-indigo-700">LocalStorage</code>). Chỉ nên dùng trên máy tính cá nhân của bạn, nếu bất khả kháng phải dùng trên máy tính của người khác thì sau khi dịch xong, cần "Xóa Key cá nhân" này khỏi ứng dụng (nút ngoài cùng bên trái).
             </p>
           </div>
 
           <!-- Section 2: Custom Models List -->
           <div class="space-y-3">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <div class="flex items-center gap-2">
-                <lucide-icon [img]="Cpu" class="w-4 h-4 text-indigo-600"></lucide-icon>
-                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
-                  2. Danh sách Mô hình AI dịch file PDF (Tối đa 7 Models)
-                  <span class="text-indigo-600 font-mono font-bold">({{ tempModels().length }}/7)</span>
-                </h4>
-              </div>
-              <div class="flex items-center gap-2">
-                <button 
-                  type="button"
-                  (click)="addModelRow()"
-                  [disabled]="tempModels().length >= 7"
-                  class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border rounded-lg transition-colors font-semibold"
-                  [ngClass]="tempModels().length >= 7 
-                    ? 'text-slate-400 bg-slate-100 border-slate-200 cursor-not-allowed opacity-60' 
-                    : 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border-indigo-200 cursor-pointer'"
-                  [title]="tempModels().length >= 7 ? 'Đã đạt giới hạn tối đa 7 model' : 'Thêm model mới'"
-                >
-                  <lucide-icon [img]="Plus" class="w-3.5 h-3.5"></lucide-icon>
-                  <span>Thêm Model</span>
-                </button>
-              </div>
+            <div class="flex items-center gap-2 mb-2">
+              <lucide-icon [img]="Cpu" class="w-4 h-4 text-indigo-600"></lucide-icon>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">
+                2. Danh sách Mô hình AI dịch file PDF (Tối đa 9 Models)
+                <span class="text-indigo-600 font-mono font-bold">({{ tempModels().length }}/9)</span>
+              </h4>
             </div>
 
             <p class="text-xs text-slate-500 leading-relaxed">
@@ -204,6 +187,22 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
                 }
               </div>
             </div>
+
+            <div class="mt-3 flex items-center justify-end">
+              <button 
+                type="button"
+                (click)="addModelRow()"
+                [disabled]="tempModels().length >= 9"
+                class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border rounded-lg transition-colors font-semibold"
+                [ngClass]="tempModels().length >= 9 
+                  ? 'text-slate-400 bg-slate-100 border-slate-200 cursor-not-allowed opacity-60' 
+                  : 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border-indigo-200 cursor-pointer'"
+                [title]="tempModels().length >= 9 ? 'Đã đạt giới hạn tối đa 9 model' : 'Thêm model mới'"
+              >
+                <lucide-icon [img]="Plus" class="w-3.5 h-3.5"></lucide-icon>
+                <span>Thêm Model</span>
+              </button>
+            </div>
           </div>
 
           <!-- Section 3: Search Keyword Translation Model -->
@@ -270,7 +269,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mức vừa (0.4 - 0.7) uyển chuyển hơn; mức cao (0.8 - 1.0) cho bản dịch diễn đạt sáng tạo hơn.
+              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mức vừa (0.4 - 0.7) uyển chuyển hơn; mức cao (0.8 - 1.0) cho bản dịch diễn đạt sáng tạo hơn... Một số model AI yêu cầu temperature có giá trị 1 để quá trình suy luận (reasoning) có kết quả tốt hơn.
             </p>
             <div class="space-y-2 pt-1">
               <input 
@@ -311,7 +310,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               type="button"
               (click)="resetDefaultModels()"
               class="px-3.5 py-2 inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition-all shadow-2xs cursor-pointer"
-              title="Khôi phục danh sách 7 model mặc định"
+              title="Khôi phục danh sách model mặc định"
             >
               <lucide-icon [img]="RotateCcw" class="w-3.5 h-3.5"></lucide-icon>
               <span>Khôi phục mặc định</span>
@@ -407,7 +406,7 @@ export class ApiKeyModalComponent implements OnInit {
   }
 
   addModelRow() {
-    if (this.tempModels().length >= 7) return;
+    if (this.tempModels().length >= 9) return;
     this.tempModels.update(list => [...list, { id: '', name: '' }]);
   }
 
@@ -446,14 +445,14 @@ export class ApiKeyModalComponent implements OnInit {
   }
 
   onSaveConfig(isReset = false) {
-    // Sanitize models: trim spaces, remove items without id, limit to max 7
+    // Sanitize models: trim spaces, remove items without id, limit to max 9
     const cleaned = this.tempModels()
       .map(m => ({
         id: m.id.trim(),
         name: m.name.trim() || m.id.trim()
       }))
       .filter(m => m.id.length > 0)
-      .slice(0, 7);
+      .slice(0, 9);
 
     this.save.emit({
       apiKey: this.tempApiKey.trim(),

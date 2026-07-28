@@ -29,8 +29,7 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: '~anthropic/claude-opus-latest', name: 'Anthropic Claude Opus Latest' },
   { id: '~x-ai/grok-latest', name: 'xAI Grok Latest' },
   { id: '~moonshotai/kimi-latest', name: 'MoonshotAI Kimi Latest' },
-  { id: 'minimax/minimax-m3', name: 'MiniMax M3' },
-  { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ phase2)' }
+  { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ Phase 2)' }
 ];
 
 @Injectable({
