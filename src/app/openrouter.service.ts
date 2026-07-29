@@ -36,7 +36,7 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   providedIn: 'root'
 })
 export class OpenRouterService {
-  private readonly DEFAULT_MODEL = 'google/gemini-2.5-flash';
+  private readonly DEFAULT_MODEL = '~google/gemini-flash-latest';
 
   private getApiKey(): string {
     if (typeof localStorage !== 'undefined') {
@@ -65,7 +65,7 @@ export class OpenRouterService {
     modelName: string = this.DEFAULT_MODEL,
     images: { id: string; dataUrl: string }[] = [],
     reasoningEffort: ReasoningEffort = 'high',
-    temperature = 0.5
+    temperature = 1
   ): Promise<string> {
     const apiKey = this.getApiKey();
     const contentParts: OpenRouterContentPart[] = [];
@@ -178,7 +178,7 @@ export class OpenRouterService {
     modelName: string = this.DEFAULT_MODEL,
     images: { id: string; dataUrl: string }[] = [],
     reasoningEffort: ReasoningEffort = 'high',
-    temperature = 0.5
+    temperature = 1
   ): Promise<string> {
     const apiKey = this.getApiKey();
     const cleanHtmlContent = htmlContent.includes(',') ? htmlContent.split(',')[1] : htmlContent;

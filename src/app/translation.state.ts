@@ -292,14 +292,15 @@ export class TranslationState {
 
       let dataToPass: string | string[] = base64;
       if (mime === 'application/pdf') {
-         const m = this.selectedModel().toLowerCase();
-         if (m.includes('openai/') || m.includes('anthropic/') || m.includes('x-ai/') || m.includes('claude') || m.includes('gpt') || m.includes('grok')) {
-            this.progressMessage.set('Đang chuẩn bị tài liệu (Tối ưu hóa hình ảnh)...');
-            const cropped = this.croppedFile();
-            if (cropped) {
-               dataToPass = await this.pdfService.renderPdfToImages(cropped);
-            }
-         }
+        const m = this.selectedModel().toLowerCase();
+        const isGemini = m.includes('google/') || m.includes('gemini');
+        if (!isGemini) {
+          this.progressMessage.set('Đang chuyển đổi PDF sang hình ảnh để tối ưu tương thích...');
+          const cropped = this.croppedFile();
+          if (cropped) {
+            dataToPass = await this.pdfService.renderPdfToImages(cropped);
+          }
+        }
       }
 
       if (currentMode === 'zero_math') {

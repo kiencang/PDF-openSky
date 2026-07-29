@@ -120,7 +120,7 @@ export class PdfService {
 
       try {
         await page.render({ canvasContext: ctx, viewport: viewport } as unknown as Parameters<typeof page.render>[0]).promise;
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
         // keep only the base64 part
         images.push(dataUrl.split(',')[1]);
       } catch (err) {
