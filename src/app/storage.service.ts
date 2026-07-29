@@ -4,9 +4,12 @@ import { DbService } from './db.service';
 export interface TranslatedDoc {
   id?: number;
   originalFileName: string;
+  originalFileBlob?: ArrayBuffer;
+  mimeType?: string;
   vietnameseTitle: string;
   mode: string;
   model?: string;
+  durationSeconds?: number;
   timestamp: number;
   content: string;
   pdfHash?: string;

@@ -28,6 +28,7 @@ export class TranslationState {
 
   availableModels = signal<OpenRouterModelConfig[]>(this.openRouterService.getCustomModels());
   selectedModel = signal<string>(this.availableModels().length > 0 ? this.availableModels()[0].id : '~google/gemini-flash-latest');
+  lastTranslatedModel = signal<string | null>(null);
   searchModel = signal<string>(this.openRouterService.getSearchModel());
   reasoningEffort = signal<ReasoningEffort>(this.getInitialReasoningEffort());
   temperature = signal<number>(this.getInitialTemperature());
@@ -269,6 +270,7 @@ export class TranslationState {
     this.error.set(null);
     this.resultHtml.set(null);
     this.elapsedTime.set(0);
+    const startTime = Date.now();
     
     this.timerInterval = setInterval(() => {
       this.elapsedTime.update(v => v + 1);
@@ -364,7 +366,9 @@ export class TranslationState {
         this.showToast('success', 'Quá trình dịch tài liệu hoàn tất!');
       }
 
-      await this.saveToHistory();
+      const durationSeconds = Math.round((Date.now() - startTime) / 1000);
+      await this.saveToHistory(durationSeconds);
+      this.lastTranslatedModel.set(this.selectedModel());
       
     } catch (e: unknown) {
       const parsedError = this.openRouterService.parseOpenRouterError(e);
@@ -386,7 +390,7 @@ export class TranslationState {
     }
   }
 
-  private async saveToHistory() {
+  private async saveToHistory(durationSeconds?: number) {
     const file = this.selectedFile();
     const content = this.resultHtml();
     const currentMode = this.mode();
@@ -408,11 +412,23 @@ export class TranslationState {
         vietnameseTitle = vietnameseTitle.substring(0, 97) + '...';
       }
 
+      let originalFileBlob: ArrayBuffer | undefined = undefined;
+      try {
+        if (file.size > 0) {
+          originalFileBlob = await file.arrayBuffer();
+        }
+      } catch (e) {
+        console.warn('Không thể lưu file đính kèm vào lịch sử:', e);
+      }
+
       await this.storageService.saveTranslation({
         originalFileName: file.name,
+        originalFileBlob: originalFileBlob,
+        mimeType: file.type || this.mimeType(),
         vietnameseTitle: vietnameseTitle,
         mode: currentMode,
         model: this.selectedModel(),
+        durationSeconds: durationSeconds ?? Math.round(this.elapsedTime()),
         timestamp: Date.now(),
         content: content,
         pdfHash: this.pdfHash() || undefined
@@ -437,6 +453,15 @@ export class TranslationState {
     this.tokenCount.set(0);
     this.progressMessage.set('');
     this.elapsedTime.set(0);
+    this.lastTranslatedModel.set(null);
+  }
+
+  clearResultForReTranslate() {
+    this.resultHtml.set(null);
+    this.error.set(null);
+    this.progressMessage.set('');
+    this.elapsedTime.set(0);
+    this.lastTranslatedModel.set(null);
   }
 
   async fetchHistory() {
@@ -460,18 +485,54 @@ export class TranslationState {
     }
   }
 
-  restoreFromHistory(doc: TranslatedDoc) {
+  async restoreFromHistory(doc: TranslatedDoc) {
     const isHtml = doc.mode === 'phase2';
-    const dummyFile = new File([], doc.originalFileName, { type: isHtml ? 'text/html' : 'application/pdf' });
+    const fileType = doc.mimeType || (isHtml ? 'text/html' : 'application/pdf');
     
-    this.selectedFile.set(dummyFile);
+    let restoredFile: File;
+    if (doc.originalFileBlob && doc.originalFileBlob.byteLength > 0) {
+      restoredFile = new File([doc.originalFileBlob], doc.originalFileName, { type: fileType });
+    } else {
+      restoredFile = new File([], doc.originalFileName, { type: fileType });
+    }
+    
+    this.selectedFile.set(restoredFile);
     this.isLoadedFromHistory.set(true);
-    this.mimeType.set(dummyFile.type);
+    this.mimeType.set(fileType);
     this.resultHtml.set(doc.content);
     this.mode.set(doc.mode as TranslationMode);
+    if (doc.model) {
+      this.selectedModel.set(doc.model);
+      this.lastTranslatedModel.set(doc.model);
+    }
     
     this.tokenCount.set(0);
     this.error.set(null);
     this.progressMessage.set('Đã khôi phục từ lịch sử');
+
+    if (restoredFile.size > 0) {
+      if (isHtml) {
+        try {
+          const textContent = await restoredFile.text();
+          const { cleanHtml, extractedImages } = this.imageProcessorService.extractImagesFromHtml(textContent);
+          this.htmlExtractedImages.set(extractedImages);
+          const cleanBase64 = btoa(unescape(encodeURIComponent(cleanHtml)));
+          this.fileBase64.set(cleanBase64);
+          await this.checkTokenLimit(cleanHtml);
+        } catch (e) {
+          console.warn('Lỗi khi chuẩn bị file HTML khôi phục:', e);
+        }
+      } else {
+        try {
+          const pages = await this.pdfService.getPageCount(restoredFile);
+          this.pdfTotalPages.set(pages);
+          this.pdfStartPage.set(1);
+          this.pdfEndPage.set(pages);
+          await this.processPdfCrop();
+        } catch (e) {
+          console.warn('Lỗi khi chuẩn bị file PDF khôi phục:', e);
+        }
+      }
+    }
   }
 }

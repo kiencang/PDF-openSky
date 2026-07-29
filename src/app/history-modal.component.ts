@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle } from 'lucide-angular';
+import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle, Timer, Download } from 'lucide-angular';
 import { TranslatedDoc } from './storage.service';
 
 @Component({
@@ -74,7 +74,13 @@ import { TranslatedDoc } from './storage.service';
                         Tên tệp gốc: <span class="font-mono text-[11px] bg-slate-100 px-1 py-0.5 rounded text-slate-600">{{ item.originalFileName }}</span>
                       </div>
                       <div class="flex items-center gap-2 mt-1.5 flex-wrap">
-                        <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
+                        @if (item.durationSeconds !== undefined && item.durationSeconds !== null) {
+                          <span class="h-5 px-2 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 font-mono inline-flex items-center justify-center gap-1 leading-none shrink-0" [title]="'Thời gian dịch: ' + item.durationSeconds + ' giây'">
+                            <lucide-icon [img]="Timer" class="w-3 h-3 text-slate-500 shrink-0"></lucide-icon>
+                            <span>{{ item.durationSeconds }}s</span>
+                          </span>
+                        }
+                        <span class="h-5 px-2 text-[10px] uppercase tracking-wider font-semibold rounded-full inline-flex items-center justify-center leading-none shrink-0"
                               [ngClass]="{
                                 'bg-emerald-50 text-emerald-700 border border-emerald-200/50': item.mode === 'zero_svg',
                                 'bg-sky-50 text-sky-700 border border-sky-200/50': item.mode === 'zero_math',
@@ -85,11 +91,11 @@ import { TranslatedDoc } from './storage.service';
                           {{ getModeLabel(item.mode) }}
                         </span>
                         @if (item.model) {
-                          <span class="text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 font-mono" [title]="item.model">
+                          <span class="h-5 px-2 text-[10px] tracking-wider font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 font-mono inline-flex items-center justify-center leading-none shrink-0" [title]="item.model">
                             {{ getModelLabel(item.model) }}
                           </span>
                         }
-                        <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                        <span class="text-[11px] text-slate-400 inline-flex items-center gap-1 shrink-0 ml-auto sm:ml-0">
                           <lucide-icon [img]="Clock" class="w-3 h-3"></lucide-icon>
                           {{ formatDate(item.timestamp) }}
                         </span>
@@ -114,6 +120,13 @@ import { TranslatedDoc } from './storage.service';
                         </button>
                       </div>
                     } @else {
+                      @if (item.originalFileBlob && item.originalFileBlob.byteLength > 0) {
+                        <button (click)="downloadOriginalFromHistory(item, $event)" 
+                                class="p-2 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer" 
+                                title="Tải về file gốc">
+                          <lucide-icon [img]="Download" class="w-4 h-4"></lucide-icon>
+                        </button>
+                      }
                       <button (click)="selectItem.emit(item)" 
                               class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer" 
                               title="Xem lại bản dịch">
@@ -142,6 +155,8 @@ export class HistoryModalComponent {
   readonly Eye = Eye;
   readonly Clock = Clock;
   readonly AlertCircle = AlertCircle;
+  readonly Timer = Timer;
+  readonly Download = Download;
 
   @Input() historyItems: TranslatedDoc[] = [];
   @Output() selectItem = new EventEmitter<TranslatedDoc>();
@@ -192,5 +207,18 @@ export class HistoryModalComponent {
   cancelDelete(event: MouseEvent) {
     event.stopPropagation();
     this.deletingItemId = null;
+  }
+
+  downloadOriginalFromHistory(item: TranslatedDoc, event: MouseEvent) {
+    event.stopPropagation();
+    if (!item.originalFileBlob || item.originalFileBlob.byteLength === 0) return;
+    const mimeType = item.mimeType || (item.mode === 'phase2' ? 'text/html' : 'application/pdf');
+    const blob = new Blob([item.originalFileBlob], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = item.originalFileName;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

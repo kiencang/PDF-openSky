@@ -14,6 +14,7 @@ import { ResultSectionComponent } from './result-section.component';
 import { TranslatedDoc } from './storage.service';
 import { HistoryModalComponent } from './history-modal.component';
 import { AppsModalComponent } from './apps-modal.component';
+import { RetranslateConfirmModalComponent } from './retranslate-confirm-modal.component';
 import { TranslationState, TranslationMode } from './translation.state';
 import { OpenRouterModelConfig, ReasoningEffort } from './openrouter.service';
 export type { TranslationMode } from './translation.state';
@@ -21,7 +22,7 @@ export type { TranslationMode } from './translation.state';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule, SettingsModalComponent, ApiKeyModalComponent, ToastsComponent, ResetConfirmModalComponent, HeaderControlsComponent, UploadZoneComponent, ConfigSectionComponent, ResultSectionComponent, HistoryModalComponent, AppsModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule, SettingsModalComponent, ApiKeyModalComponent, ToastsComponent, ResetConfirmModalComponent, HeaderControlsComponent, UploadZoneComponent, ConfigSectionComponent, ResultSectionComponent, HistoryModalComponent, AppsModalComponent, RetranslateConfirmModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,6 +73,9 @@ export class App {
   showResetConfirm = signal<boolean>(false);
   showHistoryModal = signal<boolean>(false);
   showAppsModal = signal<boolean>(false);
+  showReTranslateConfirm = signal<boolean>(false);
+  pendingModelId = signal<string>('');
+  pendingModelName = signal<string>('');
   isFullscreen = signal<boolean>(false);
   
   @ViewChild('resetBtn') resetBtn?: ElementRef<HTMLButtonElement>;
@@ -115,7 +119,25 @@ export class App {
       this.translationState.mode.set(val);
     });
     this.modelControl.valueChanges.subscribe(val => {
-      this.translationState.selectedModel.set(val);
+      const currentSelected = this.translationState.selectedModel();
+      if (val === currentSelected) return;
+
+      const hasValidFile = this.hasFile() && (this.translationState.selectedFile()?.size ?? 0) > 0;
+      const hasResult = !!this.resultHtml();
+
+      if (hasValidFile && hasResult) {
+        // Revert select dropdown temporarily until confirmed
+        this.modelControl.setValue(currentSelected, { emitEvent: false });
+
+        const modelObj = this.availableModels().find(m => m.id === val);
+        const modelName = modelObj ? modelObj.name : val.replace(/^~/, '');
+
+        this.pendingModelId.set(val);
+        this.pendingModelName.set(modelName);
+        this.showReTranslateConfirm.set(true);
+      } else {
+        this.translationState.selectedModel.set(val);
+      }
     });
 
     // Handle initial mode load
@@ -282,8 +304,25 @@ export class App {
       const a = document.createElement('a');
       a.href = url;
       const file = this.selectedFile();
+
+      // Get model name or ID and format it
+      const currentModelId = this.selectedModel();
+      const modelObj = this.availableModels().find(m => m.id === currentModelId);
+      let rawModelName = modelObj ? modelObj.name : (currentModelId ? currentModelId.replace(/^~/, '') : '');
+
+      // Limit max 30 characters (including spaces), then trim
+      rawModelName = rawModelName.trim().substring(0, 30).trim();
+
+      // Replace spaces & invalid filename characters with underscores
+      const formattedModelName = rawModelName
+        ? rawModelName.replace(/[\s/\\?%*:|"<>]+/g, '_')
+        : '';
+
+      const modelPart = formattedModelName ? `_${formattedModelName}` : '';
       const suffix = this.mode() === 'phase1' ? '_converted' : '_translated';
-      a.download = `${file?.name.replace(/\.[^/.]+$/, "") || 'document'}${suffix}.html`;
+      const fileName = file?.name.replace(/\.[^/.]+$/, "") || 'document';
+
+      a.download = `${fileName}${modelPart}${suffix}.html`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -313,9 +352,29 @@ export class App {
     this.translationState.deleteHistoryItem(id);
   }
 
-  selectHistoryItem(doc: TranslatedDoc) {
-    this.translationState.restoreFromHistory(doc);
+  confirmReTranslate() {
+    const newModel = this.pendingModelId();
+    if (newModel) {
+      this.translationState.selectedModel.set(newModel);
+      this.modelControl.setValue(newModel, { emitEvent: false });
+      this.translationState.clearResultForReTranslate();
+      this.showToast('info', 'Đã xóa kết quả xem trước. Bạn có thể bấm "Bắt đầu ngay" để dịch lại.');
+    }
+    this.showReTranslateConfirm.set(false);
+    this.pendingModelId.set('');
+    this.pendingModelName.set('');
+  }
+
+  cancelReTranslate() {
+    this.showReTranslateConfirm.set(false);
+    this.pendingModelId.set('');
+    this.pendingModelName.set('');
+  }
+
+  async selectHistoryItem(doc: TranslatedDoc) {
+    await this.translationState.restoreFromHistory(doc);
     this.modeControl.setValue(doc.mode as TranslationMode);
+    this.modelControl.setValue(this.translationState.selectedModel(), { emitEvent: false });
     this.showHistoryModal.set(false);
     this.showToast('success', 'Đã khôi phục thành công bản dịch từ lịch sử dịch!');
   }

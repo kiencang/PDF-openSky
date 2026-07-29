@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, RefreshCw, UploadCloud, CheckCircle2, Scissors, Loader2, FileEdit, AlertCircle, Clock } from 'lucide-angular';
+import { LucideAngularModule, RefreshCw, UploadCloud, CheckCircle2, Scissors, Loader2, FileEdit, AlertCircle, Clock, Download } from 'lucide-angular';
 
 @Component({
   selector: 'app-upload-zone',
@@ -83,7 +83,14 @@ import { LucideAngularModule, RefreshCw, UploadCloud, CheckCircle2, Scissors, Lo
                 </p>
               </div>
 
-              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 mt-2 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 shadow-sm rounded-lg transition-all cursor-pointer" (click)="fileInput.click(); $event.stopPropagation()">
+              @if (selectedFile && selectedFile.size > 0) {
+                <button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 mt-2 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 shadow-sm rounded-lg transition-all cursor-pointer" (click)="downloadOriginalFile(); $event.stopPropagation()">
+                  <lucide-icon [img]="Download" class="w-3.5 h-3.5" aria-hidden="true"></lucide-icon>
+                  Tải về file gốc
+                </button>
+              }
+
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 mt-1 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 shadow-sm rounded-lg transition-all cursor-pointer" (click)="fileInput.click(); $event.stopPropagation()">
                 <lucide-icon [img]="UploadCloud" class="w-3.5 h-3.5" aria-hidden="true"></lucide-icon>
                 Tải tệp mới lên
               </button>
@@ -145,10 +152,12 @@ import { LucideAngularModule, RefreshCw, UploadCloud, CheckCircle2, Scissors, Lo
                 </div>
               }
 
-              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 mt-2 text-xs font-medium text-slate-600 bg-transparent border border-slate-300 hover:bg-white hover:text-slate-900 hover:shadow-sm rounded-md transition-all cursor-pointer" (click)="fileInput.click(); $event.stopPropagation()">
-                <lucide-icon [img]="FileEdit" class="w-3.5 h-3.5" aria-hidden="true"></lucide-icon>
-                Chọn file khác
-              </button>
+              <div class="mt-2">
+                <button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-transparent border border-slate-300 hover:bg-white hover:text-slate-900 hover:shadow-sm rounded-md transition-all cursor-pointer" (click)="fileInput.click(); $event.stopPropagation()">
+                  <lucide-icon [img]="FileEdit" class="w-3.5 h-3.5" aria-hidden="true"></lucide-icon>
+                  Chọn file khác
+                </button>
+              </div>
             </div>
           }
         </div>
@@ -172,6 +181,7 @@ export class UploadZoneComponent {
   readonly FileEdit = FileEdit;
   readonly AlertCircle = AlertCircle;
   readonly Clock = Clock;
+  readonly Download = Download;
 
   @Input() isProcessing = false;
   @Input() hasFile = false;
@@ -232,5 +242,15 @@ export class UploadZoneComponent {
 
   onEndPageChange(val: number) {
     this.pageChange.emit({ start: this.pdfStartPage, end: val });
+  }
+
+  downloadOriginalFile() {
+    if (!this.selectedFile || this.selectedFile.size === 0) return;
+    const url = URL.createObjectURL(this.selectedFile);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.selectedFile.name;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }
