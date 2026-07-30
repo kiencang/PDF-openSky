@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Key, X, ExternalLink, EyeOff, Eye, Trash2, Plus, RotateCcw, Cpu, ArrowUp, ArrowDown, Brain, Sliders, Search } from 'lucide-angular';
+import { LucideAngularModule, Key, X, ExternalLink, EyeOff, Eye, Trash2, Plus, RotateCcw, Cpu, ArrowUp, ArrowDown, Brain, Sliders, Search, ShieldAlert } from 'lucide-angular';
 import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } from './openrouter.service';
 
 @Component({
@@ -94,7 +94,15 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </button>
             </div>
             <p class="text-[11px] text-slate-500 italic">
-              Khóa API được lưu cục bộ an toàn trong trình duyệt của bạn (<code class="font-mono text-[10px] bg-slate-200/60 px-1 py-0.5 rounded text-indigo-700">LocalStorage</code>). Chỉ nên dùng trên máy tính cá nhân của bạn, nếu bất khả kháng phải dùng trên máy tính của người khác thì sau khi dịch xong, cần "Xóa Key cá nhân" này khỏi ứng dụng (nút ngoài cùng bên trái).
+              Khóa API được lưu cục bộ an toàn trong trình duyệt của bạn (<code class="font-mono text-[10px] bg-slate-200/60 px-1 py-0.5 rounded text-indigo-700">LocalStorage</code>). Chỉ nên dùng trên máy tính cá nhân của bạn, nếu bất khả kháng phải dùng trên máy tính của người khác thì sau khi dịch xong, cần "Xóa Key cá nhân" này khỏi ứng dụng (nút ngoài cùng ở dưới, bên trái).
+            </p>
+          </div>
+
+          <!-- Recommendation Box: Credit Limit & Expiration -->
+          <div class="bg-amber-50/70 border border-amber-200/90 rounded-2xl p-4 text-xs text-amber-950 shadow-xs flex items-start gap-2.5">
+            <lucide-icon [img]="ShieldAlert" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></lucide-icon>
+            <p class="leading-relaxed text-slate-700">
+              <strong class="font-semibold text-slate-900">Khuyến nghị đặt hạn mức chi tiêu (Credit Limit):</strong> Bạn nên tạo một API Key riêng cho ứng dụng này và cài đặt limit (ví dụ: chi tiêu tối đa 10$ là dừng hoặc/và thêm tùy chỉnh ngày mà Key hết hạn, chẳng hạn sau một tháng). Điều đó sẽ giúp Key của bạn an toàn hơn, tránh các rủi ro chi tiêu quá mức.
             </p>
           </div>
 
@@ -338,6 +346,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
 })
 export class ApiKeyModalComponent implements OnInit {
   readonly SearchIcon = Search;
+  readonly ShieldAlert = ShieldAlert;
   readonly Brain = Brain;
   readonly Sliders = Sliders;
   readonly Key = Key;

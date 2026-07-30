@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getEncoding } from 'js-tiktoken';
+import { getSecureApiKey } from './crypto-storage.util';
 
 export type ReasoningEffort = 'high' | 'medium' | 'low' | 'none';
 
@@ -38,17 +39,15 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
 export class OpenRouterService {
   private readonly DEFAULT_MODEL = '~google/gemini-flash-latest';
 
-  private getApiKey(): string {
-    if (typeof localStorage !== 'undefined') {
-      const userKey = localStorage.getItem('openrouter_api_key') || localStorage.getItem('sila_pdf_translator_user_api_key');
-      if (userKey && userKey.trim() !== '') {
-        return userKey.trim();
-      }
+  private async getApiKey(): Promise<string> {
+    const key = await getSecureApiKey();
+    if (key && key.trim() !== '') {
+      return key.trim();
     }
     throw new Error('Vui lòng nhập OpenRouter API Key để sử dụng ứng dụng. Bạn có thể lấy Key tại openrouter.ai/keys.');
   }
 
-  async countTokens(text: string, mimeType?: string): Promise<number> {
+  async countTokens(text: string, _mimeType?: string): Promise<number> {
     try {
       const enc = getEncoding('cl100k_base');
       return enc.encode(text).length;
@@ -67,7 +66,7 @@ export class OpenRouterService {
     reasoningEffort: ReasoningEffort = 'high',
     temperature = 1
   ): Promise<string> {
-    const apiKey = this.getApiKey();
+    const apiKey = await this.getApiKey();
     const contentParts: OpenRouterContentPart[] = [];
 
     if (mimeType === 'text/html' && typeof fileData === 'string') {
@@ -180,7 +179,7 @@ export class OpenRouterService {
     reasoningEffort: ReasoningEffort = 'high',
     temperature = 1
   ): Promise<string> {
-    const apiKey = this.getApiKey();
+    const apiKey = await this.getApiKey();
     const cleanHtmlContent = htmlContent.includes(',') ? htmlContent.split(',')[1] : htmlContent;
 
     let htmlText = cleanHtmlContent;
@@ -254,7 +253,7 @@ export class OpenRouterService {
   }
 
   async translateSearchQuery(query: string, modelName?: string): Promise<string> {
-    const apiKey = this.getApiKey();
+    const apiKey = await this.getApiKey();
     const activeModel = modelName || this.getSearchModel();
     const systemInstruction = `Bạn là một AI chuyên dịch truy vấn tìm kiếm (search queries) từ tiếng Việt sang Tiếng Anh. Nhiệm vụ DUY NHẤT của bạn là trả về MỘT (1) truy vấn tìm kiếm tiếng Anh hiệu quả nhất.
 QUY TẮC:

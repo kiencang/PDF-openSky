@@ -17,6 +17,7 @@ import { AppsModalComponent } from './apps-modal.component';
 import { RetranslateConfirmModalComponent } from './retranslate-confirm-modal.component';
 import { TranslationState, TranslationMode } from './translation.state';
 import { OpenRouterModelConfig, ReasoningEffort } from './openrouter.service';
+import { getSecureApiKey, saveSecureApiKey, removeSecureApiKey } from './crypto-storage.util';
 export type { TranslationMode } from './translation.state';
 
 @Component({
@@ -148,11 +149,12 @@ export class App {
         this.translationState.mode.set(savedMode);
       }
 
-      // Load saved user API Key
-      const savedKey = localStorage.getItem('sila_pdf_translator_user_api_key');
-      if (savedKey) {
-        this.translationState.userApiKey.set(savedKey);
-      }
+      // Load saved user API Key securely
+      getSecureApiKey().then(savedKey => {
+        if (savedKey) {
+          this.translationState.userApiKey.set(savedKey);
+        }
+      });
     }
   }
 
@@ -187,14 +189,10 @@ export class App {
     this.showToast('success', 'Đã lưu chế độ mặc định!');
   }
 
-  openApiKeyModal() {
+  async openApiKeyModal() {
     if (this.isProcessing()) return;
-    if (typeof localStorage !== 'undefined') {
-      const savedKey = localStorage.getItem('sila_pdf_translator_user_api_key') || '';
-      this.tempApiKey.set(savedKey);
-    } else {
-      this.tempApiKey.set('');
-    }
+    const savedKey = (await getSecureApiKey()) || '';
+    this.tempApiKey.set(savedKey);
     this.showKeyPlain.set(false);
     this.showApiKeyModal.set(true);
   }
@@ -203,11 +201,9 @@ export class App {
     this.showApiKeyModal.set(false);
   }
 
-  saveApiKey(data: { apiKey: string; customModels: OpenRouterModelConfig[]; searchModel?: string; reasoningEffort?: ReasoningEffort; temperature?: number; isReset?: boolean }) {
+  async saveApiKey(data: { apiKey: string; customModels: OpenRouterModelConfig[]; searchModel?: string; reasoningEffort?: ReasoningEffort; temperature?: number; isReset?: boolean }) {
     const keyVal = data.apiKey.trim();
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('sila_pdf_translator_user_api_key', keyVal);
-    }
+    await saveSecureApiKey(keyVal);
     this.translationState.userApiKey.set(keyVal);
     this.translationState.saveCustomModels(data.customModels);
     if (data.searchModel) {
@@ -230,10 +226,8 @@ export class App {
     }
   }
 
-  clearApiKey() {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('sila_pdf_translator_user_api_key');
-    }
+  async clearApiKey() {
+    await removeSecureApiKey();
     this.translationState.userApiKey.set('');
     this.tempApiKey.set('');
     this.showApiKeyModal.set(false);
