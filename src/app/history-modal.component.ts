@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle, Timer, Download } from 'lucide-angular';
+import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle, Timer, Download, Cpu } from 'lucide-angular';
 import { TranslatedDoc } from './storage.service';
 
 @Component({
@@ -61,14 +61,17 @@ import { TranslatedDoc } from './storage.service';
           } @else {
             <div class="divide-y divide-slate-100">
               @for (item of historyItems; track item.id) {
-                <div class="py-3.5 flex items-center justify-between gap-4 group hover:bg-slate-50/70 px-3 -mx-3 rounded-xl transition-all duration-150">
+                <div class="py-3.5 flex items-center justify-between gap-4 group px-3 -mx-3 rounded-xl transition-all duration-150 border" [ngClass]="item.id === activeId ? 'bg-indigo-50/60 border-indigo-100 shadow-sm' : 'hover:bg-slate-50/70 border-transparent'">
                   <button type="button" class="flex items-start text-left gap-3 flex-1 min-w-0 cursor-pointer focus:outline-none" (click)="selectItem.emit(item)">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors" [ngClass]="item.id === activeId ? 'bg-indigo-600 text-white shadow-md' : 'bg-indigo-50 text-indigo-600'">
                       <lucide-icon [img]="FileText" class="w-5 h-5"></lucide-icon>
                     </div>
                     <div class="min-w-0 flex-1">
-                      <div class="text-sm font-semibold text-slate-900 truncate group-hover:text-indigo-600 transition-colors" [title]="item.vietnameseTitle">
-                        {{ item.vietnameseTitle }}
+                      <div class="text-sm font-semibold truncate group-hover:text-indigo-600 transition-colors flex items-center gap-2" [ngClass]="item.id === activeId ? 'text-indigo-700' : 'text-slate-900'" [title]="item.vietnameseTitle">
+                        <span class="truncate">{{ item.vietnameseTitle }}</span>
+                        @if (item.id === activeId) {
+                          <span class="text-[9px] font-bold uppercase tracking-wider bg-indigo-200/80 text-indigo-800 px-1.5 py-0.5 rounded-md shrink-0">Đang xem</span>
+                        }
                       </div>
                       <div class="text-xs text-slate-500 truncate mt-0.5" [title]="item.originalFileName">
                         Tên tệp gốc: <span class="font-mono text-[11px] bg-slate-100 px-1 py-0.5 rounded text-slate-600">{{ item.originalFileName }}</span>
@@ -91,7 +94,8 @@ import { TranslatedDoc } from './storage.service';
                           {{ getModeLabel(item.mode) }}
                         </span>
                         @if (item.model) {
-                          <span class="h-5 px-2 text-[10px] tracking-wider font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200/60 font-mono inline-flex items-center justify-center leading-none shrink-0" [title]="item.model">
+                          <span class="h-5 px-2 text-[10px] tracking-wider font-bold rounded-full bg-violet-100 text-violet-700 border border-violet-200 shadow-sm font-mono inline-flex items-center gap-1 justify-center leading-none shrink-0" [title]="item.model">
+                            <lucide-icon [img]="Cpu" class="w-3 h-3"></lucide-icon>
                             {{ getModelLabel(item.model) }}
                           </span>
                         }
@@ -157,8 +161,10 @@ export class HistoryModalComponent {
   readonly AlertCircle = AlertCircle;
   readonly Timer = Timer;
   readonly Download = Download;
+  readonly Cpu = Cpu;
 
   @Input() historyItems: TranslatedDoc[] = [];
+  @Input() activeId: number | null = null;
   @Output() selectItem = new EventEmitter<TranslatedDoc>();
   @Output() deleteItem = new EventEmitter<number>();
   @Output() closeModal = new EventEmitter<void>();

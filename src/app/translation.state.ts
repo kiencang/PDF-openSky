@@ -57,6 +57,7 @@ export class TranslationState {
   elapsedTime = signal<number>(0);
   isLoadedFromHistory = signal<boolean>(false);
   historyItems = signal<TranslatedDoc[]>([]);
+  currentHistoryId = signal<number | null>(null);
 
   isPdfUploaded = computed(() => this.mimeType() === 'application/pdf');
   isHtmlUploaded = computed(() => this.mimeType() === 'text/html');
@@ -455,6 +456,7 @@ export class TranslationState {
     this.progressMessage.set('');
     this.elapsedTime.set(0);
     this.lastTranslatedModel.set(null);
+    this.currentHistoryId.set(null);
   }
 
   clearResultForReTranslate() {
@@ -463,6 +465,7 @@ export class TranslationState {
     this.progressMessage.set('');
     this.elapsedTime.set(0);
     this.lastTranslatedModel.set(null);
+    this.currentHistoryId.set(null);
   }
 
   async fetchHistory() {
@@ -499,6 +502,7 @@ export class TranslationState {
     
     this.selectedFile.set(restoredFile);
     this.isLoadedFromHistory.set(true);
+    this.currentHistoryId.set(doc.id || null);
     this.mimeType.set(fileType);
     this.resultHtml.set(doc.content);
     this.mode.set(doc.mode as TranslationMode);

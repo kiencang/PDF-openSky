@@ -87,6 +87,7 @@ export class App {
   selectedFile = this.translationState.selectedFile;
   hasFile = this.translationState.hasFile;
   isLoadedFromHistory = this.translationState.isLoadedFromHistory;
+  currentHistoryId = this.translationState.currentHistoryId;
   resultHtml = this.translationState.resultHtml;
   pdfTotalPages = this.translationState.pdfTotalPages;
   pdfStartPage = this.translationState.pdfStartPage;
