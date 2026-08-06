@@ -480,6 +480,11 @@ export class TranslationState {
 
   async deleteHistoryItem(id: number) {
     try {
+      const itemToDelete = this.historyItems().find(item => item.id === id);
+      if (itemToDelete?.pdfHash) {
+        await this.dbService.clearImagesByPdf(itemToDelete.pdfHash);
+      }
+      
       await this.storageService.delete(id);
       await this.fetchHistory();
       this.showToast('success', 'Đã xóa bản dịch khỏi lịch sử thành công.');
