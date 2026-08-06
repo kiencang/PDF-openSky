@@ -285,7 +285,20 @@ export class TranslationState {
       let extractedImages: ExtractedImage[] = [];
       if (this.pdfHash()) {
         try {
-          extractedImages = await this.dbService.getImagesByPdf(this.pdfHash()!);
+          const oldImages = await this.dbService.getImagesByPdf(this.pdfHash()!);
+          
+          // Tạo một ID phiên bản mới hoàn toàn độc lập cho lần dịch này
+          const newSessionHash = crypto.randomUUID();
+          
+          for (let i = 0; i < oldImages.length; i++) {
+            const img = oldImages[i];
+            const newImgId = `${newSessionHash}_img_${i}`;
+            await this.dbService.saveImage(newImgId, newSessionHash, img.dataUrl);
+            extractedImages.push({ id: newImgId, dataUrl: img.dataUrl });
+          }
+          
+          // Cập nhật lại pdfHash thành sessionHash mới để lưu vào lịch sử
+          this.pdfHash.set(newSessionHash);
         } catch (e) {
           console.warn('Không thể lấy ảnh từ DB', e);
         }
@@ -466,6 +479,16 @@ export class TranslationState {
     this.elapsedTime.set(0);
     this.lastTranslatedModel.set(null);
     this.currentHistoryId.set(null);
+    
+    // Nếu file được load từ lịch sử, fileBase64 sẽ là null, ta cần chuẩn bị lại file
+    if (!this.fileBase64() && this.selectedFile() && this.selectedFile()!.size > 0) {
+       const file = this.selectedFile()!;
+       if (file.type === 'application/pdf') {
+         this.handlePdfFile(file);
+       } else if (file.type === 'text/html' || file.name.endsWith('.html')) {
+         this.handleHtmlFile(file);
+       }
+    }
   }
 
   async fetchHistory() {
