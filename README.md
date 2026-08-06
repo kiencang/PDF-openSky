@@ -8,6 +8,8 @@ Dịch file PDF từ tiếng Anh sang tiếng Việt bằng bất kỳ model AI 
 
 PDF-openSky được điều chỉnh, phát triển thêm dựa trên phiên bản PDF-silaTranslator-Online (1.0.64) đã ổn định: https://github.com/kiencang/PDF-silaTranslator-Online
 
+SI/Prompt (v1.3.44): https://github.com/kiencang/SI-Prompt-PDF-EV-Translate
+
 ## Lý do triển khai
 
 PDF-silaTranslator-Online hiện có chất lượng tốt, tương thích rất mạnh với Gemini AI, tuy nhiên nó chỉ cho phép dùng Gemini mà không dùng được bất cứ AI nào khác.
