@@ -28,9 +28,8 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: '~google/gemini-flash-latest', name: 'Google Gemini Flash Latest' },
   { id: '~openai/gpt-latest', name: 'OpenAI GPT Latest' },
   { id: '~anthropic/claude-opus-latest', name: 'Anthropic Claude Opus Latest' },
-  { id: '~x-ai/grok-latest', name: 'xAI Grok Latest' },
-  { id: '~moonshotai/kimi-latest', name: 'MoonshotAI Kimi Latest' },
   { id: 'openai/gpt-5.6-luna', name: 'OpenAI GPT-5.6 Luna' },
+  { id: '~deepseek/deepseek-v4-flash-latest', name: 'DeepSeek V4 Flash Latest (chỉ Phase 2)' },
   { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ Phase 2)' }
 ];
 
