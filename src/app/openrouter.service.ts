@@ -30,6 +30,7 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: '~anthropic/claude-opus-latest', name: 'Anthropic Claude Opus Latest' },
   { id: '~x-ai/grok-latest', name: 'xAI Grok Latest' },
   { id: '~moonshotai/kimi-latest', name: 'MoonshotAI Kimi Latest' },
+  { id: 'openai/gpt-5.6-luna', name: 'OpenAI GPT-5.6 Luna' },
   { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ Phase 2)' }
 ];
 
