@@ -66,6 +66,16 @@ Cho phép điều chỉnh, nhưng mặc định để 1 như khuyến cáo của
 
 Trừ khi kết quả dịch tệ, người dùng mới nên hạ thấp con số này xuống, ví dụ chuyển thành 0.5
 
+## Hãy chọn giá đúng!
+
+Nếu đang quen dùng API miễn phí với Gemini (trên AI Studio) và giờ chuyển qua mô hình tính phí trên OpenRouter thì bạn kiểu gì cũng phải tính toán hơn một chút, nếu không sẽ rất đau ví. Vì giờ đây, từng từ bạn dịch đều có chi phí nhất định, và có những model có giá lên đến 30$/1M token, tức là dịch tầm 10 - 15 trang có thể bay ngay 1$ trong tài khoản.
+
+Ở khía cạnh cân bằng cả chi phí & chất lượng, tôi nghĩ mục bạn cần quan tâm nhất là `Value leaders` trong danh sách các model AI được liệt kê ở đây https://openrouter.ai/discover
+
+Chúng ta hãy thử ví dụ: GPT-5.6 Luna có điểm số chất lượng 83% (tốt hơn 83% các model AI khác), và điểm số tuyệt đối vào khoảng 52, chỉ kém vài điểm so với nhiều model top 10 (tại thời điểm khảo sát, vị trí số 10 có điểm tuyệt đối là 55), còn giá của nó ở mức $0.10 / $0.60 per 1M. So với giá của model khác khá tương đồng về chỉ số chất lượng là Gemini Flash 3.5 có giá lên tới $1.50 / $9 per 1M, chúng ta có thể thấy mức chênh lệch lên tới 15 lần!
+
+Dĩ nhiên điểm số chất lượng không phải là thang đo chính xác tuyệt đối cho thấy chất lượng dịch như thế nào, vì không loại trừ câu chuyện điểm số chất lượng thấp hơn đôi chút lại cho chất lượng dịch ổn hơn. Tuy vậy, đây là chỉ số khởi đầu rất tốt để chúng ta đánh giá tương quan chất lượng/giá cả và đưa ra các thử nghiệm dịch thuật, rồi cuối cùng chọn model nào phù hợp nhất.
+
 ## Tuyên bố từ chối trách nhiệm
 Công cụ này có thể được sử dụng cho mục đích nghiên cứu và học tập cá nhân.
 
