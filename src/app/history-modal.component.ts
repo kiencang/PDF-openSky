@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle, Timer, Download, Cpu } from 'lucide-angular';
+import { LucideAngularModule, X, FileText, Trash2, Eye, Clock, AlertCircle, Timer, Download, Cpu, Coins } from 'lucide-angular';
 import { TranslatedDoc } from './storage.service';
 
 @Component({
@@ -104,6 +104,14 @@ import { TranslatedDoc } from './storage.service';
                           {{ formatDate(item.timestamp) }}
                         </span>
                       </div>
+                      @if (item.promptTokens !== undefined || item.completionTokens !== undefined) {
+                        <div class="flex items-center gap-1.5 mt-2 text-[11px] text-amber-800 bg-amber-50/80 px-2.5 py-1 rounded-md w-fit border border-amber-200/60 font-mono shadow-2xs">
+                          <lucide-icon [img]="Coins" class="w-3.5 h-3.5 text-amber-600 shrink-0" aria-hidden="true"></lucide-icon>
+                          <span>Input: <strong class="font-bold text-amber-950">{{ formatKTokens(item.promptTokens) }}K</strong> token</span>
+                          <span class="text-amber-300 select-none">|</span>
+                          <span>Output: <strong class="font-bold text-amber-950">{{ formatKTokens(item.completionTokens) }}K</strong> token</span>
+                        </div>
+                      }
                     </div>
                   </button>
 
@@ -162,6 +170,7 @@ export class HistoryModalComponent {
   readonly Timer = Timer;
   readonly Download = Download;
   readonly Cpu = Cpu;
+  readonly Coins = Coins;
 
   @Input() historyItems: TranslatedDoc[] = [];
   @Input() activeId: number | null = null;
@@ -226,5 +235,10 @@ export class HistoryModalComponent {
     a.download = item.originalFileName;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  formatKTokens(tokens?: number): string {
+    if (tokens === undefined || tokens === null) return '0';
+    return (tokens / 1000).toFixed(1);
   }
 }

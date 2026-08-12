@@ -16,6 +16,15 @@ export interface OpenRouterModelConfig {
   name: string;
 }
 
+export interface OpenRouterTranslationResult {
+  text: string;
+  usage?: {
+    promptTokens?: number;
+    completionTokens?: number;
+    totalTokens?: number;
+  };
+}
+
 export interface OpenRouterContentPart {
   type: 'text' | 'image_url';
   text?: string;
@@ -66,7 +75,7 @@ export class OpenRouterService {
     images: { id: string; dataUrl: string }[] = [],
     reasoningEffort: ReasoningEffort = 'high',
     temperature = 1
-  ): Promise<string> {
+  ): Promise<OpenRouterTranslationResult> {
     const apiKey = await this.getApiKey();
     const contentParts: OpenRouterContentPart[] = [];
 
@@ -168,7 +177,15 @@ export class OpenRouterService {
       throw new Error('OpenRouter không trả về nội dung kết quả.');
     }
 
-    return text;
+    const usage = json.usage;
+    return {
+      text,
+      usage: usage ? {
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        totalTokens: usage.total_tokens
+      } : undefined
+    };
   }
 
   async translateHtml(
@@ -179,7 +196,7 @@ export class OpenRouterService {
     images: { id: string; dataUrl: string }[] = [],
     reasoningEffort: ReasoningEffort = 'high',
     temperature = 1
-  ): Promise<string> {
+  ): Promise<OpenRouterTranslationResult> {
     const apiKey = await this.getApiKey();
     const cleanHtmlContent = htmlContent.includes(',') ? htmlContent.split(',')[1] : htmlContent;
 
@@ -250,7 +267,15 @@ export class OpenRouterService {
       throw new Error('OpenRouter không trả về nội dung kết quả.');
     }
 
-    return text;
+    const usage = json.usage;
+    return {
+      text,
+      usage: usage ? {
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        totalTokens: usage.total_tokens
+      } : undefined
+    };
   }
 
   async translateSearchQuery(query: string, modelName?: string): Promise<string> {

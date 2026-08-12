@@ -13,6 +13,8 @@ export interface TranslatedDoc {
   timestamp: number;
   content: string;
   pdfHash?: string;
+  promptTokens?: number;
+  completionTokens?: number;
 }
 
 @Injectable({

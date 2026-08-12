@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { OpenRouterService, OpenRouterModelConfig, ReasoningEffort } from './openrouter.service';
+import { OpenRouterService, OpenRouterModelConfig, ReasoningEffort, OpenRouterTranslationResult } from './openrouter.service';
 import { ToastService } from './toast.service';
 import { PdfService } from './pdf.service';
 import { DbService } from './db.service';
@@ -55,6 +55,8 @@ export class TranslationState {
   htmlExtractedImages = signal<ExtractedImage[]>([]);
   
   elapsedTime = signal<number>(0);
+  lastPromptTokens = signal<number | null>(null);
+  lastCompletionTokens = signal<number | null>(null);
   isLoadedFromHistory = signal<boolean>(false);
   historyItems = signal<TranslatedDoc[]>([]);
   currentHistoryId = signal<number | null>(null);
@@ -271,6 +273,8 @@ export class TranslationState {
     this.error.set(null);
     this.resultHtml.set(null);
     this.elapsedTime.set(0);
+    this.lastPromptTokens.set(null);
+    this.lastCompletionTokens.set(null);
     const startTime = Date.now();
     
     this.timerInterval = setInterval(() => {
@@ -317,14 +321,16 @@ export class TranslationState {
         }
       }
 
+      let translationRes: OpenRouterTranslationResult;
+
       if (currentMode === 'zero_math') {
         this.progressMessage.set('Dịch file PDF sang tiếng Việt (Tài liệu khoa học xã hội)...');
         const [instruction, prompt] = await Promise.all([
           this.loadPrompt('zero_math_system_instructions.md'),
           this.loadPrompt('zero_math_prompt.md')
         ]);
-        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
-        const rawHtml = this.imageProcessorService.extractHtml(result);
+        translationRes = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const rawHtml = this.imageProcessorService.extractHtml(translationRes.text);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
       else if (currentMode === 'zero_svg') {
@@ -333,8 +339,8 @@ export class TranslationState {
           this.loadPrompt('zero_svg_system_instructions.md'),
           this.loadPrompt('zero_svg_prompt.md')
         ]);
-        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
-        const rawHtml = this.imageProcessorService.extractHtml(result);
+        translationRes = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const rawHtml = this.imageProcessorService.extractHtml(translationRes.text);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
       else if (currentMode === 'normal') {
@@ -343,8 +349,8 @@ export class TranslationState {
           this.loadPrompt('math_system_instructions.md'),
           this.loadPrompt('math_prompt.md')
         ]);
-        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
-        const rawHtml = this.imageProcessorService.extractHtml(result);
+        translationRes = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const rawHtml = this.imageProcessorService.extractHtml(translationRes.text);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
       else if (currentMode === 'phase1') {
@@ -353,8 +359,8 @@ export class TranslationState {
           this.loadPrompt('phase_1_system_instructions.md'),
           this.loadPrompt('phase_1_prompt.md')
         ]);
-        const result = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
-        const rawHtml = this.imageProcessorService.extractHtml(result);
+        translationRes = await this.openRouterService.translate(dataToPass, mime, prompt, instruction, this.selectedModel(), extractedImages, this.reasoningEffort(), this.temperature());
+        const rawHtml = this.imageProcessorService.extractHtml(translationRes.text);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, extractedImages));
       }
       else if (currentMode === 'phase2') {
@@ -369,9 +375,20 @@ export class TranslationState {
         ]);
         
         const htmlContent = base64;
-        const result = await this.openRouterService.translateHtml(htmlContent, prompt, instruction, this.selectedModel(), this.htmlExtractedImages(), this.reasoningEffort(), this.temperature());
-        const rawHtml = this.imageProcessorService.extractHtml(result);
+        translationRes = await this.openRouterService.translateHtml(htmlContent, prompt, instruction, this.selectedModel(), this.htmlExtractedImages(), this.reasoningEffort(), this.temperature());
+        const rawHtml = this.imageProcessorService.extractHtml(translationRes.text);
         this.resultHtml.set(this.imageProcessorService.postProcessHtml(rawHtml, this.htmlExtractedImages()));
+      } else {
+        throw new Error('Chế độ dịch không hợp lệ.');
+      }
+
+      if (translationRes.usage) {
+        if (translationRes.usage.promptTokens !== undefined) {
+          this.lastPromptTokens.set(translationRes.usage.promptTokens);
+        }
+        if (translationRes.usage.completionTokens !== undefined) {
+          this.lastCompletionTokens.set(translationRes.usage.completionTokens);
+        }
       }
 
       this.progressMessage.set('Done!');
@@ -446,7 +463,9 @@ export class TranslationState {
         durationSeconds: durationSeconds ?? Math.round(this.elapsedTime()),
         timestamp: Date.now(),
         content: content,
-        pdfHash: this.pdfHash() || undefined
+        pdfHash: this.pdfHash() || undefined,
+        promptTokens: this.lastPromptTokens() ?? undefined,
+        completionTokens: this.lastCompletionTokens() ?? undefined
       }).catch(err => console.error('Lỗi khi lưu lịch sử:', err));
     }
   }
