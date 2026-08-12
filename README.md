@@ -1,6 +1,6 @@
 # PDF-openSky
 
-Dịch file PDF từ tiếng Anh sang tiếng Việt bằng bất kỳ model AI nào hiện có trên cổng trung gian [OpenRouter](https://openrouter.ai/).
+Dịch file PDF từ tiếng Anh sang tiếng Việt bằng bất cứ AI nào phù hợp qua cổng trung gian [OpenRouter](https://openrouter.ai/).
 
 **Link**: https://pdf-opensky.wpsila.com
 
