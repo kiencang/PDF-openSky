@@ -14,7 +14,7 @@ import { LucideAngularModule, Download, Maximize, Minimize, Loader2, Clock, File
       
       <!-- Result Header -->
       <div class="p-4 border-b border-slate-100 bg-white/80 backdrop-blur-md flex items-center justify-between shrink-0 z-10 sticky top-0">
-        <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">Result • Đọc tốt nhất trên màn hình lớn (laptop/desktop)</h2>
+        <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">Bản dịch • Đọc tốt nhất trên màn hình lớn</h2>
         
         @if (resultHtml) {
           <div class="flex items-center gap-2">

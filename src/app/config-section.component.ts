@@ -16,7 +16,7 @@ import { OpenRouterModelConfig } from './openrouter.service';
       <section class="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative transition-opacity duration-300 overflow-hidden"
                [class.opacity-50]="isProcessing" 
                [class.pointer-events-none]="isProcessing">
-        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
           <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">2. Chọn mô hình AI</h2>
           <button (click)="openApiKeyModal.emit()" 
                   class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
@@ -46,7 +46,7 @@ import { OpenRouterModelConfig } from './openrouter.service';
       <section class="bg-white rounded-2xl ring-1 ring-slate-900/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative transition-opacity duration-300 overflow-hidden"
                [class.opacity-50]="isProcessing" 
                [class.pointer-events-none]="isProcessing">
-        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between gap-3">
           <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wider">3. Phong cách dịch</h2>
           <button (click)="openSettings.emit()" 
                   class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
