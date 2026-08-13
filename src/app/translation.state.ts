@@ -286,7 +286,7 @@ export class TranslationState {
       const mime = this.mimeType();
       const currentMode = this.mode();
       
-      let extractedImages: ExtractedImage[] = [];
+      const extractedImages: ExtractedImage[] = [];
       if (this.pdfHash()) {
         try {
           const oldImages = await this.dbService.getImagesByPdf(this.pdfHash()!);

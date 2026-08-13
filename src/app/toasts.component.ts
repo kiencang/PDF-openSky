@@ -13,7 +13,7 @@ import { ToastService } from './toast.service';
       @for (toast of toasts(); track toast.id) {
         <div class="pointer-events-auto flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-xl border bg-white min-w-[280px] sm:min-w-[360px] w-full animate-in slide-in-from-right-8 fade-in duration-300"
              [class.border-red-200]="toast.type === 'error'"
-             [class.bg-red-50\/90]="toast.type === 'error'"
+             [class.bg-red-50/90]="toast.type === 'error'"
              [class.border-emerald-200]="toast.type === 'success'"
              [class.border-blue-200]="toast.type === 'info'">
           

@@ -57,7 +57,7 @@ export class OpenRouterService {
     throw new Error('Vui lòng nhập OpenRouter API Key để sử dụng ứng dụng. Bạn có thể lấy Key tại openrouter.ai/keys.');
   }
 
-  async countTokens(text: string, _mimeType?: string): Promise<number> {
+  async countTokens(text: string): Promise<number> {
     try {
       const enc = getEncoding('cl100k_base');
       return enc.encode(text).length;

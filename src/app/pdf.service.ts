@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 export interface PdfCropResult {
@@ -14,7 +16,8 @@ export interface PdfCropResult {
 })
 export class PdfService {
 
-  async hashFile(file: File): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async hashFile(_file: File): Promise<string> {
     return crypto.randomUUID();
   }
 
@@ -47,7 +50,7 @@ export class PdfService {
               let imgData: any = null;
               
               // Hàm xử lý lấy object với Timeout (Tránh treo trình duyệt)
-              const fetchObjectWithTimeout = (targetObjs: any, name: string, timeoutMs: number = 5000): Promise<any> => {
+              const fetchObjectWithTimeout = (targetObjs: any, name: string, timeoutMs = 5000): Promise<any> => {
                 return new Promise((resolve) => {
                   let isResolved = false;
                   const timeoutId = setTimeout(() => {
@@ -65,7 +68,8 @@ export class PdfService {
                         resolve(obj);
                       }
                     });
-                  } catch (err) {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  } catch (_err) {
                     if (!isResolved) {
                       clearTimeout(timeoutId);
                       isResolved = true;
@@ -121,8 +125,7 @@ export class PdfService {
                 } else if (srcData.length === width * height) {
                   // Grayscale
                   let j = 0;
-                  for (let k = 0; k < srcData.length; k++) {
-                    const val = srcData[k];
+                  for (const val of srcData) {
                     destData[j] = val;
                     destData[j + 1] = val;
                     destData[j + 2] = val;

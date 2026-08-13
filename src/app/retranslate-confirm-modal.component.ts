@@ -14,7 +14,9 @@ import { LucideAngularModule, RefreshCw, Info, X } from 'lucide-angular';
            (keydown.escape)="onCancel()"
            tabindex="-1">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative transform transition-all animate-in zoom-in-95 duration-200"
-             (click)="$event.stopPropagation()">
+             (click)="$event.stopPropagation()"
+             (keydown.enter)="$event.stopPropagation()"
+             tabindex="0">
           
           <!-- Close button -->
           <button (click)="onCancel()" 
@@ -75,13 +77,13 @@ export class RetranslateConfirmModalComponent {
   @Input() isOpen = false;
   @Input() newModelName = '';
   @Output() confirm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   onConfirm() {
     this.confirm.emit();
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.closeModal.emit();
   }
 }
