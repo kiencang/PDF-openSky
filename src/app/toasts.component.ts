@@ -9,26 +9,27 @@ import { ToastService } from './toast.service';
   imports: [CommonModule, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite" aria-atomic="true">
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none max-w-[calc(100vw-3rem)] sm:max-w-lg md:max-w-xl" aria-live="polite" aria-atomic="true">
       @for (toast of toasts(); track toast.id) {
-        <div class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border bg-white min-w-[300px] max-w-md animate-in slide-in-from-right-8 fade-in duration-300"
+        <div class="pointer-events-auto flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-xl border bg-white min-w-[280px] sm:min-w-[360px] w-full animate-in slide-in-from-right-8 fade-in duration-300"
              [class.border-red-200]="toast.type === 'error'"
+             [class.bg-red-50\/90]="toast.type === 'error'"
              [class.border-emerald-200]="toast.type === 'success'"
              [class.border-blue-200]="toast.type === 'info'">
           
-          <div class="shrink-0 w-2 h-2 rounded-full"
+          <div class="shrink-0 w-2.5 h-2.5 rounded-full mt-1"
                [class.bg-red-500]="toast.type === 'error'"
                [class.bg-emerald-500]="toast.type === 'success'"
                [class.bg-blue-500]="toast.type === 'info'"></div>
                
-          <p class="text-sm font-medium flex-1"
-             [class.text-red-800]="toast.type === 'error'"
-             [class.text-emerald-800]="toast.type === 'success'"
-             [class.text-blue-800]="toast.type === 'info'">
+          <div class="text-sm font-medium flex-1 leading-relaxed break-words [overflow-wrap:anywhere] whitespace-pre-wrap max-h-[50vh] overflow-y-auto pr-1 select-text"
+             [class.text-red-950]="toast.type === 'error'"
+             [class.text-emerald-950]="toast.type === 'success'"
+             [class.text-blue-950]="toast.type === 'info'">
             {{ toast.message }}
-          </p>
+          </div>
           
-          <button (click)="removeToast(toast.id)" class="shrink-0 p-1.5 rounded-full hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-colors focus:outline-none cursor-pointer" aria-label="Đóng thông báo">
+          <button (click)="removeToast(toast.id)" class="shrink-0 -mr-1 -mt-0.5 p-1.5 rounded-lg hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 transition-colors focus:outline-none cursor-pointer" aria-label="Đóng thông báo">
             <lucide-icon [img]="XIcon" class="w-4 h-4" aria-hidden="true"></lucide-icon>
           </button>
         </div>
