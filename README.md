@@ -12,19 +12,19 @@ SI/Prompt (v1.3.48): https://github.com/kiencang/SI-Prompt-PDF-EV-Translate
 
 ## Lý do triển khai
 
-PDF-silaTranslator-Online hiện có chất lượng tốt, tương thích rất mạnh với Gemini AI, tuy nhiên nó chỉ cho phép dùng Gemini mà không dùng được bất cứ AI nào khác.
+PDF-silaTranslator hiện có chất lượng tốt, tương thích rất mạnh với Gemini AI, tuy nhiên nó chỉ cho phép dùng Gemini mà không dùng được với bất cứ AI nào khác.
 
 PDF-openSky ra đời nhằm khỏa lấp chỗ trống đó, nó giúp người dùng sử dụng các model AI rất mạnh khác mà thị trường hiện có sẵn.
 
 Để giảm mức độ phức tạp của mã nguồn và tăng khả năng mở rộng lên tối đa, PDF-openSky sử dụng cổng trung gian OpenRouter (https://openrouter.ai/) để kết nối với các model AI. OpenRouter rất dễ đăng ký cũng như sử dụng.
 
-Vì OpenRouter là API trung gian và hầu hết các model trên này đều có phí, nếu người dùng nào có khả năng chi trả hạn chế vẫn nên tiếp tục sử dụng PDF-silaTranslator-Online, vì công cụ này tận dụng được ngưỡng miễn phí ngày tương đối rộng rãi của Gemini.
+Vì OpenRouter là cổng API trung gian và hầu hết các model trên này đều có phí, nên nếu người dùng nào có khả năng chi trả hạn chế vẫn nên tiếp tục sử dụng PDF-silaTranslator, vì công cụ này tận dụng được ngưỡng miễn phí hàng ngày tương đối rộng rãi của Gemini.
 
 ## Tính năng chính
 
-Về cơ bản, PDF-openSky không khác biệt với PDF-silaTranslator-Online, chúng đều có cùng thiết kế và hệ thống SI/Prompt dịch thuật.
+Về cơ bản, PDF-openSky không khác biệt với PDF-silaTranslator, chúng đều có cùng thiết kế và hệ thống SI/Prompt dịch thuật.
 
-Điểm khác căn bản là PDF-openSky cho phép kết nối với nhiều model AI khác, và gần như là bất cứ AI nào trên thị trường hiện có (OpenRouter có khả năng kết nối tới 400 model AI khác nhau).
+Điểm khác căn bản là PDF-openSky cho phép kết nối với nhiều model AI khác, và gần như là bất cứ AI nào trên thị trường hiện có (OpenRouter có khả năng kết nối tới 500 model AI khác nhau).
 
 Mặc định PDF-openSky có các model AI sau:
 - Google Gemini Flash Latest
@@ -48,7 +48,7 @@ Dịch từ khóa không cần các model quá mạnh, nó chỉ cần đủ t�
 ### Một số trải nghiệm thực tế
 - Dịch nhanh nhất: Google Gemini Flash Latest;
 - Chất lượng tổng thể tốt nhất: OpenAI GPT Latest, Anthropic Claude Opus Latest, Google Gemini Flash Latest;
-- Chất lượng kém nhất: MiniMax M3;
+- Chất lượng kém nhất trong danh sách trên: MiniMax M3;
 - Tiềm năng, triển vọng: Z.ai GLM 5.2, MoonshotAI Kimi Latest;
 - Tốt nhưng rất chậm: MoonshotAI Kimi Latest;
 
@@ -62,13 +62,13 @@ Người dùng có quyền điều chỉnh tham số này, bao gồm cả thiế
 
 ## Độ sáng tạo (temperature)
 
-Cho phép điều chỉnh, nhưng mặc định để 1 như khuyến cáo của một số model AI. Giá trị mặc định này giúp AI suy luận tốt hơn.
+Cho phép điều chỉnh, nhưng mặc định để là 1 như khuyến cáo của một số model AI. Giá trị mặc định này giúp AI suy luận tốt hơn.
 
 Trừ khi kết quả dịch tệ, người dùng mới nên hạ thấp con số này xuống, ví dụ chuyển thành 0.5
 
 ## Hãy chọn giá đúng!
 
-Nếu đang quen dùng API miễn phí với Gemini (trên AI Studio) và giờ chuyển qua mô hình tính phí trên OpenRouter thì bạn kiểu gì cũng phải tính toán hơn một chút, nếu không sẽ rất đau ví. Vì giờ đây, từng từ bạn dịch đều có chi phí nhất định, và có những model có giá lên đến 30$/1M token, tức là dịch tầm 10 - 15 trang có thể bay ngay 1$ trong tài khoản.
+Nếu đang quen dùng API miễn phí với Gemini (trên AI Studio) và giờ chuyển qua mô hình tính phí trên OpenRouter thì bạn kiểu gì cũng phải tính toán hơn một chút, nếu không sẽ rất đau ví. Vì giờ đây, từng từ bạn dịch đều có chi phí nhất định, và có những model có giá lên đến 30$/1M token, tức là dịch tầm 10 - 15 trang có thể tốn 1$ trong tài khoản.
 
 Ở khía cạnh cân bằng cả chi phí & chất lượng, tôi nghĩ mục bạn cần quan tâm nhất là `Value leaders` trong danh sách các model AI được liệt kê ở đây https://openrouter.ai/discover
 
