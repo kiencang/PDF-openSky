@@ -18,12 +18,12 @@ import { LucideAngularModule, Download, Maximize, Minimize, Loader2, Clock, File
         
         @if (resultHtml) {
           <div class="flex items-center gap-2">
-            <button (click)="downloadHtml.emit()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 rounded-md transition-colors flex items-center gap-1.5 text-xs font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" title="Download HTML">
+            <button (click)="downloadHtml.emit()" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 rounded-md transition-colors flex items-center gap-1.5 text-xs font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" title="Tải về bản dịch.">
               <lucide-icon [img]="DownloadIcon" class="w-3.5 h-3.5" aria-hidden="true"></lucide-icon>
               Download
             </button>
             <div class="w-px h-6 bg-slate-200 mx-1"></div>
-            <button (click)="toggleFullscreen.emit()" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" [title]="isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình'" [attr.aria-label]="isFullscreen ? 'Thu nhỏ' : 'Toàn màn hình'">
+            <button (click)="toggleFullscreen.emit()" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" [title]="isFullscreen ? 'Thu nhỏ' : 'Đọc toàn màn hình.'" [attr.aria-label]="isFullscreen ? 'Thu nhỏ' : 'Đọc toàn màn hình.'">
               @if (isFullscreen) {
                 <lucide-icon [img]="MinimizeIcon" class="w-4 h-4" aria-hidden="true"></lucide-icon>
               } @else {

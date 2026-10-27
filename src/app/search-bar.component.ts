@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Search, Loader2, X, ExternalLink } from 'lucide-angular';
@@ -73,6 +73,7 @@ export class SearchBarComponent {
 
   isSearching = signal<boolean>(false);
   isProcessing = input<boolean>(false);
+  searchingChange = output<boolean>();
   translatedQuery = signal<string>('');
   searchQuery = signal<string>('');
 
@@ -81,6 +82,7 @@ export class SearchBarComponent {
 
     this.searchQuery.set(query);
     this.isSearching.set(true);
+    this.searchingChange.emit(true);
     this.translatedQuery.set('');
 
     try {
@@ -91,11 +93,14 @@ export class SearchBarComponent {
       this.toastService.show('error', `Lỗi dịch từ khóa: ${parsedError}`);
     } finally {
       this.isSearching.set(false);
+      this.searchingChange.emit(false);
     }
   }
 
   closeSearch() {
     this.translatedQuery.set('');
     this.searchQuery.set('');
+    this.isSearching.set(false);
+    this.searchingChange.emit(false);
   }
 }

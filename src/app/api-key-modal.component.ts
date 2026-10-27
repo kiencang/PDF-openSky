@@ -47,7 +47,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
           <!-- OpenRouter Overview & Pricing Note -->
           <div class="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4.5 text-xs text-slate-700 leading-relaxed space-y-2.5">
             <p>
-              Ứng dụng kết nối trực tiếp với OpenRouter API, cổng trung gian này sẽ kết nối với bất cứ model AI nào mà nó có (hiện có gần 400 model). Vì dịch là nhiệm vụ khó, bạn hãy chọn các model AI chất lượng nhất trong khả năng. Ứng dụng lưu trữ sẵn một số model mặc định chất lượng cao, bạn có thể tự do điều chỉnh lại thành các model khác theo ý muốn.
+              Ứng dụng kết nối trực tiếp với OpenRouter API, <strong class="font-semibold text-slate-900">cổng trung gian này</strong> sẽ kết nối với bất cứ model AI nào mà nó có (hiện có khoảng 500 model). Vì dịch là nhiệm vụ khó, bạn hãy chọn các model AI chất lượng nhất trong khả năng. Ứng dụng lưu trữ sẵn một số model mặc định chất lượng cao, bạn có thể tự do điều chỉnh lại thành các model khác theo ý muốn.
             </p>
             <p>
               Một số model thuộc nhóm hàng đầu có chi phí lớn, có thể dao động từ 10 - 30$/1M token đầu ra, để kiểm soát chi phí tốt hơn, bạn nên nắm rõ giá của chúng. Hãy vào trang: 
@@ -277,7 +277,7 @@ import { OpenRouterModelConfig, DEFAULT_OPENROUTER_MODELS, ReasoningEffort } fro
               </span>
             </div>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mức vừa (0.4 - 0.7) uyển chuyển hơn; mức cao (0.8 - 1.0) cho bản dịch diễn đạt sáng tạo hơn... Một số model AI yêu cầu temperature có giá trị 1 để quá trình suy luận (reasoning) có kết quả tốt hơn.
+              Điều chỉnh độ linh hoạt khi AI dịch. Mức thấp (0.0 - 0.3) phù hợp tài liệu kỹ thuật/chính xác cao; mức vừa (0.4 - 0.7) uyển chuyển hơn; mức cao (0.8 - 1.0) cho bản dịch diễn đạt sáng tạo hơn... Một số model AI yêu cầu temperature có giá trị 1 để quá trình suy luận (reasoning) có kết quả tốt hơn... Nếu không chắc chắn, bạn hãy để như mặc định của ứng dụng.
             </p>
             <div class="space-y-2 pt-1">
               <input 

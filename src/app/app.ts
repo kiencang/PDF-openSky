@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, ViewChild, ElementRef, DestroyRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { ToastService } from './toast.service';
@@ -6,7 +6,6 @@ import { LucideAngularModule, UploadCloud, FileText, Settings, Play, Download, C
 import { SettingsModalComponent } from './settings-modal.component';
 import { ApiKeyModalComponent } from './api-key-modal.component';
 import { ToastsComponent } from './toasts.component';
-import { ResetConfirmModalComponent } from './reset-confirm-modal.component';
 import { HeaderControlsComponent } from './header-controls.component';
 import { UploadZoneComponent } from './upload-zone.component';
 import { ConfigSectionComponent } from './config-section.component';
@@ -23,7 +22,7 @@ export type { TranslationMode } from './translation.state';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule, SettingsModalComponent, ApiKeyModalComponent, ToastsComponent, ResetConfirmModalComponent, HeaderControlsComponent, UploadZoneComponent, ConfigSectionComponent, ResultSectionComponent, HistoryModalComponent, AppsModalComponent, RetranslateConfirmModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule, SettingsModalComponent, ApiKeyModalComponent, ToastsComponent, HeaderControlsComponent, UploadZoneComponent, ConfigSectionComponent, ResultSectionComponent, HistoryModalComponent, AppsModalComponent, RetranslateConfirmModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,15 +70,12 @@ export class App {
   showApiKeyModal = signal<boolean>(false);
   tempApiKey = signal<string>('');
   showKeyPlain = signal<boolean>(false);
-  showResetConfirm = signal<boolean>(false);
   showHistoryModal = signal<boolean>(false);
   showAppsModal = signal<boolean>(false);
   showReTranslateConfirm = signal<boolean>(false);
   pendingModelId = signal<string>('');
   pendingModelName = signal<string>('');
   isFullscreen = signal<boolean>(false);
-  
-  @ViewChild('resetBtn') resetBtn?: ElementRef<HTMLButtonElement>;
 
   // Expose store state to view
   availableModels = this.translationState.availableModels;
@@ -263,32 +259,12 @@ export class App {
     this.translationState.processFile();
   }
 
-  resetApp() {
-    if (this.resultHtml()) {
-      this.showResetConfirm.set(true);
-    } else {
-      this.confirmReset();
-    }
-  }
-
-  confirmReset() {
+  onLogoClick() {
+    if (this.isProcessing()) return;
     this.translationState.resetSession();
     this.isFullscreen.set(false);
-    this.showResetConfirm.set(false);
-    
     this.modeControl.setValue('zero_svg');
-
-    this.showToast('info', 'Đã làm mới phiên làm việc.');
-    setTimeout(() => {
-      this.resetBtn?.nativeElement?.focus();
-    }, 50);
-  }
-
-  cancelReset() {
-    this.showResetConfirm.set(false);
-    setTimeout(() => {
-      this.resetBtn?.nativeElement?.focus();
-    }, 50);
+    this.showToast('info', 'Đã quay về trang chủ.');
   }
 
   downloadHtml() {
