@@ -37,7 +37,7 @@ import { LucideAngularModule, Download, Maximize, Minimize, Loader2, Clock, File
       <!-- Result Content -->
       <div class="flex-1 relative bg-slate-50/50">
         @if (isProcessing) {
-          <div class="absolute inset-0 bg-white z-10 flex flex-col">
+          <div class="absolute inset-0 bg-white z-10 flex flex-col overflow-hidden">
             <!-- Overlay with spinner -->
             <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/40 z-20">
               <lucide-icon [img]="Loader2Icon" class="w-10 h-10 text-indigo-600 animate-spin mb-4" aria-hidden="true"></lucide-icon>
@@ -48,19 +48,71 @@ import { LucideAngularModule, Download, Maximize, Minimize, Loader2, Clock, File
               </div>
               <p class="text-slate-500 text-sm mt-4 max-w-md text-center">Thời gian thao tác sẽ cần từ 2 cho đến khoảng 5 phút, tùy thuộc vào độ dài và mức độ phức tạp của nội dung.</p>
             </div>
-            <!-- Skeleton UI -->
-            <div class="p-8 space-y-8 animate-pulse">
-              <div class="h-8 bg-slate-200 rounded-lg w-3/4"></div>
-              <div class="space-y-4">
-                <div class="h-4 bg-slate-200 rounded w-full"></div>
-                <div class="h-4 bg-slate-200 rounded w-full"></div>
-                <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+            <!-- Skeleton UI (Full Single Column Document) -->
+            <div class="p-8 space-y-6 animate-pulse select-none relative h-full overflow-hidden">
+              <!-- Header / Title section -->
+              <div class="space-y-2">
+                <div class="h-7 bg-slate-200 rounded-lg w-3/4"></div>
+                <div class="h-3.5 bg-slate-100 rounded w-2/5"></div>
               </div>
-              <div class="space-y-4 pt-4">
-                <div class="h-4 bg-slate-200 rounded w-full"></div>
-                <div class="h-4 bg-slate-200 rounded w-4/5"></div>
+
+              <!-- Section 1: Introduction -->
+              <div class="space-y-3 pt-1">
+                <div class="h-5 bg-slate-200 rounded w-1/4"></div>
+                <div class="space-y-2">
+                  <div class="h-3.5 bg-slate-200 rounded w-full"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-11/12"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-full"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-4/5"></div>
+                </div>
               </div>
-              <div class="h-40 bg-slate-100 rounded-xl border border-slate-100 mt-8"></div>
+
+              <!-- Simulated Table / Callout Box -->
+              <div class="p-4 rounded-xl border border-slate-200/70 bg-slate-50/70 space-y-3">
+                <div class="h-4 bg-slate-200 rounded w-1/3"></div>
+                <div class="grid grid-cols-4 gap-3 pt-1">
+                  <div class="h-3 bg-slate-200 rounded"></div>
+                  <div class="h-3 bg-slate-200 rounded"></div>
+                  <div class="h-3 bg-slate-200 rounded"></div>
+                  <div class="h-3 bg-slate-200 rounded"></div>
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                  <div class="h-2.5 bg-slate-200/70 rounded"></div>
+                </div>
+              </div>
+
+              <!-- Section 2: Methodology / Analysis -->
+              <div class="space-y-3">
+                <div class="h-5 bg-slate-200 rounded w-1/3"></div>
+                <div class="space-y-2">
+                  <div class="h-3.5 bg-slate-200 rounded w-full"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-full"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-5/6"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-3/4"></div>
+                </div>
+              </div>
+
+              <!-- Section 3: Detailed Discussion -->
+              <div class="space-y-3">
+                <div class="h-5 bg-slate-200 rounded w-1/4"></div>
+                <div class="space-y-2">
+                  <div class="h-3.5 bg-slate-200 rounded w-full"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-11/12"></div>
+                  <div class="h-3.5 bg-slate-200 rounded w-4/5"></div>
+                </div>
+              </div>
+
+              <!-- Bottom Gradient Fade-out -->
+              <div class="absolute bottom-0 inset-x-0 h-28 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-10"></div>
             </div>
           </div>
         }

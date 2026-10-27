@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, input, output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, input, output, viewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Search, Loader2, X, ExternalLink } from 'lucide-angular';
@@ -11,7 +11,7 @@ import { ToastService } from './toast.service';
   imports: [CommonModule, FormsModule, LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="relative w-full md:w-96 lg:w-[500px]">
+    <div class="relative w-full md:w-96 lg:w-[550px]">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         @if (isSearching()) {
           <lucide-icon [img]="Loader2" class="w-4 h-4 text-indigo-500 animate-spin" aria-hidden="true"></lucide-icon>
@@ -51,6 +51,7 @@ import { ToastService } from './toast.service';
               [href]="'https://scholar.google.com/scholar?q=' + translatedQuery()" 
               target="_blank" 
               rel="noopener noreferrer"
+              (click)="onOpenScholar()"
               class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium flex items-center justify-center gap-2 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer"
             >
               <span>Mở Google Scholar</span>
@@ -77,6 +78,8 @@ export class SearchBarComponent {
   translatedQuery = signal<string>('');
   searchQuery = signal<string>('');
 
+  readonly searchInputRef = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+
   async onSearch(query: string) {
     if (!query.trim() || this.isSearching()) return;
 
@@ -98,9 +101,17 @@ export class SearchBarComponent {
   }
 
   closeSearch() {
+    const el = this.searchInputRef()?.nativeElement;
+    if (el) {
+      el.value = '';
+    }
     this.translatedQuery.set('');
     this.searchQuery.set('');
     this.isSearching.set(false);
     this.searchingChange.emit(false);
+  }
+
+  onOpenScholar() {
+    this.closeSearch();
   }
 }
