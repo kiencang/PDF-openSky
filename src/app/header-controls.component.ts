@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, FileText, Cpu, Key, Ban } from 'lucide-angular';
+import { LucideAngularModule, FileText, Cpu, Key } from 'lucide-angular';
 import { SearchBarComponent } from './search-bar.component';
 
 @Component({
@@ -15,24 +15,16 @@ import { SearchBarComponent } from './search-bar.component';
           <!-- Logo and Title -->
           @if (isBusy()) {
             <div 
-              class="flex items-center gap-2.5 p-1.5 -m-1.5 rounded-xl cursor-not-allowed opacity-65 select-none transition-all"
-              title="Đang trong quá trình dịch, tính năng quay về trang chủ bị vô hiệu hóa"
+              class="flex items-center gap-2.5 p-1.5 -m-1.5 rounded-xl cursor-not-allowed opacity-80 select-none transition-all"
+              title="Đang trong quá trình dịch, tính năng quay về trang chủ tạm thời bị khóa"
               aria-disabled="true"
             >
-              <div class="relative bg-slate-400 text-white p-1.5 rounded-lg shrink-0 shadow-sm">
+              <div class="bg-indigo-600 text-white p-1.5 rounded-lg shrink-0 shadow-sm">
                 <lucide-icon [img]="FileText" class="w-5 h-5" aria-hidden="true"></lucide-icon>
-                <!-- Ban / circle-with-slash badge -->
-                <span class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white p-0.5 rounded-full ring-2 ring-white flex items-center justify-center">
-                  <lucide-icon [img]="Ban" class="w-3 h-3 stroke-[2.5]" aria-hidden="true"></lucide-icon>
-                </span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-xl font-bold font-display tracking-tight text-slate-500 leading-tight">
+              <div>
+                <span class="text-xl font-bold font-display tracking-tight text-slate-900 leading-tight">
                   PDF-openSky
-                </span>
-                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-                  <lucide-icon [img]="Ban" class="w-3 h-3 stroke-[2.5]" aria-hidden="true"></lucide-icon>
-                  <span>Đang bận</span>
                 </span>
               </div>
             </div>
@@ -65,7 +57,6 @@ export class HeaderControlsComponent {
   readonly FileText = FileText;
   readonly Cpu = Cpu;
   readonly Key = Key;
-  readonly Ban = Ban;
 
   @Input() isProcessing = false;
   @Input() selectedModel = 'google/gemini-2.5-flash';

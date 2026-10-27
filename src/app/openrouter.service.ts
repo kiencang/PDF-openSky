@@ -38,7 +38,7 @@ export const DEFAULT_OPENROUTER_MODELS: OpenRouterModelConfig[] = [
   { id: '~openai/gpt-latest', name: 'OpenAI GPT Latest' },
   { id: '~anthropic/claude-opus-latest', name: 'Anthropic Claude Opus Latest' },
   { id: 'openai/gpt-5.6-luna', name: 'OpenAI GPT-5.6 Luna' },
-  { id: 'meta/muse-spark-1.2', name: 'Meta Muse Spark 1.2' },
+  { id: 'meta/muse-spark-1.3', name: 'Meta Muse Spark 1.3' },
   { id: '~deepseek/deepseek-v4-flash-latest', name: 'DeepSeek V4 Flash Latest (chỉ Phase 2)' },
   { id: 'z-ai/glm-5.2', name: 'Z.ai GLM 5.2 (chỉ Phase 2)' }
 ];
@@ -341,7 +341,21 @@ QUY TẮC:
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            let changed = false;
+            const updated = parsed.map((m: OpenRouterModelConfig) => {
+              if (m.id === 'meta/muse-spark-1.2') {
+                changed = true;
+                return {
+                  id: 'meta/muse-spark-1.3',
+                  name: m.name === 'Meta Muse Spark 1.2' ? 'Meta Muse Spark 1.3' : m.name
+                };
+              }
+              return m;
+            });
+            if (changed) {
+              this.saveCustomModels(updated);
+            }
+            return updated;
           }
         } catch {
           // Ignore

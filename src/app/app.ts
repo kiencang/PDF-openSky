@@ -298,7 +298,7 @@ export class App {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      this.showToast('success', 'Đã tải file HTML xuống máy.');
+      this.showToast('success', 'Đã tải bản dịch xuống máy.');
     }
   }
 
