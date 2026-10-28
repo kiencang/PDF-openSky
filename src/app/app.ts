@@ -139,13 +139,11 @@ export class App {
     });
 
     // Handle initial mode load
-    if (typeof localStorage !== 'undefined') {
-      const savedMode = localStorage.getItem('sila_pdf_translator_default_mode') as TranslationMode;
-      if (savedMode) {
-        this.modeControl.setValue(savedMode);
-        this.translationState.mode.set(savedMode);
-      }
+    const initialMode = this.getSavedDefaultMode();
+    this.modeControl.setValue(initialMode);
+    this.translationState.mode.set(initialMode);
 
+    if (typeof localStorage !== 'undefined') {
       // Load saved user API Key securely
       getSecureApiKey().then(savedKey => {
         if (savedKey) {
@@ -153,6 +151,16 @@ export class App {
         }
       });
     }
+  }
+
+  private getSavedDefaultMode(): TranslationMode {
+    if (typeof localStorage !== 'undefined') {
+      const savedMode = localStorage.getItem('sila_pdf_translator_default_mode') as TranslationMode;
+      if (savedMode) {
+        return savedMode;
+      }
+    }
+    return 'zero_svg';
   }
 
   showToast(type: 'error' | 'info' | 'success', message: string) {
@@ -166,11 +174,7 @@ export class App {
   }
 
   openSettings() {
-    let savedMode: TranslationMode | null = null;
-    if (typeof localStorage !== 'undefined') {
-      savedMode = localStorage.getItem('sila_pdf_translator_default_mode') as TranslationMode;
-    }
-    this.defaultModeControl.setValue(savedMode || 'zero_svg');
+    this.defaultModeControl.setValue(this.getSavedDefaultMode());
     this.showSettingsModal.set(true);
   }
 
@@ -179,8 +183,13 @@ export class App {
   }
 
   saveSettings() {
+    const newDefaultMode = this.defaultModeControl.value;
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('sila_pdf_translator_default_mode', this.defaultModeControl.value);
+      localStorage.setItem('sila_pdf_translator_default_mode', newDefaultMode);
+    }
+    if (!this.isProcessing() && !this.hasFile()) {
+      this.modeControl.setValue(newDefaultMode);
+      this.translationState.mode.set(newDefaultMode);
     }
     this.showSettingsModal.set(false);
     this.showToast('success', 'Đã lưu chế độ mặc định!');
@@ -263,7 +272,9 @@ export class App {
     if (this.isProcessing()) return;
     this.translationState.resetSession();
     this.isFullscreen.set(false);
-    this.modeControl.setValue('zero_svg');
+    const defaultMode = this.getSavedDefaultMode();
+    this.modeControl.setValue(defaultMode);
+    this.translationState.mode.set(defaultMode);
     this.showToast('info', 'Đã quay về trang chủ.');
   }
 
