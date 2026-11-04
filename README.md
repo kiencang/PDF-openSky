@@ -76,6 +76,11 @@ Chúng ta hãy thử ví dụ: GPT-5.6 Luna có điểm số chất lượng 83%
 
 Dĩ nhiên điểm số chất lượng không phải là thang đo chính xác tuyệt đối cho thấy chất lượng dịch như thế nào, vì không loại trừ câu chuyện điểm số chất lượng thấp hơn đôi chút lại cho chất lượng dịch ổn hơn. Tuy vậy, đây là chỉ số khởi đầu rất tốt để chúng ta đánh giá tương quan chất lượng/giá cả và đưa ra các thử nghiệm dịch thuật, rồi cuối cùng chọn model nào phù hợp nhất.
 
+## Một số lưu ý khi dùng với API Key trả phí
+- Không chia sẻ API Key trả phí với người dùng khác, vì bạn sẽ bị tốn chi phí;
+- Luôn thiết lập ngưỡng cho API Key bạn dùng để tránh chi tiêu quá mức, ví dụ thiết lập ngưỡng chi tiêu tối đa 300 ngàn đồng/tháng;
+- Nên dùng ứng dụng này trên các trình duyệt đáng tin cậy, tốt nhất là Chrome, Firefox hoặc Edge. Ngoài ra nên hạn chế các addon cài trên trình duyệt;
+
 ## Tuyên bố từ chối trách nhiệm
 Công cụ này có thể được sử dụng cho mục đích nghiên cứu và học tập cá nhân.
 
